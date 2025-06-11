@@ -13,7 +13,19 @@ exports.registeruserIn=(username,email,password,role)=>{
             resolve(result);
             }
         })
-    })
-        
-        
+    })       
 }
+
+exports.findUserByEmailOrUsername = (email, username,role) => {
+    let sql = "SELECT * FROM users WHERE (email = ? OR username = ?) AND role= ? " ;
+    
+    return new Promise((resolve, reject) => {
+        db.query(sql, [email, username , role], (err, result) => {
+            if (err) {
+                return reject(err);
+            } else {
+                resolve(result.length > 0 ? result[0] : null);
+            }
+        });
+    });
+};
