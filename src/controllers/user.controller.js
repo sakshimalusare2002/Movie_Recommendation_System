@@ -19,7 +19,7 @@ exports.PostUser = (req, res) => {
   models.findUserByEmailOrUsername(email, username, role)
     .then((existingUser) => {
       if (existingUser) {
-        return res.send("User already exists");
+        return res.send("User already exists with this role");
       }
 
       // Hash password
@@ -35,7 +35,6 @@ exports.PostUser = (req, res) => {
                 { expiresIn: "1h" }
               );
 
-<<<<<<< Updated upstream
               // Send response
               return res.send("user data save successfully");
             });
@@ -46,24 +45,3 @@ exports.PostUser = (req, res) => {
       res.send("User not registered");
     });
 };
-=======
-    const token = jwt.sign(
-      {
-        username, email, role}, 
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" }
-      );
-     res.send("user register succesfullyy",token);
-     res.end();
-  })
-  
-  .catch((err)=>{
-    console.log("error");
-     res.send("user not register");
-  });
-}
-
-exports.afterlogin=(req,res)=>{
-  res.send("Login succesfully");
-}
->>>>>>> Stashed changes
