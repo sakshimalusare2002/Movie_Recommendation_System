@@ -13,30 +13,35 @@ exports.LoginPageOfUser=(req,res)=>{
 exports.RegistartionPage=(req,res)=>{
   res.render("UserRegistration.ejs")
 }
-exports.PostUser=(req,res)=>{
- 
+exports.PostUser = (req, res) => {
+  const { username, email, password, role } = req.body;
 
-  let {username,email,password,role}=req.body;
+  models.findUserByEmailOrUsername(email, username, role)
+    .then((existingUser) => {
+      if (existingUser) {
+        return res.send("User already exists");
+      }
 
-  bcrypt.hash(password,10)
-  .then((hashedPassword)=>{
-    return models.registeruserIn(username,email,password,role)
-  })
-  
-  .then((result)=>{
-    console.log("user register");
+      // Hash password
+      return bcrypt.hash(password, 10)
+        .then((hashedPassword) => {
+          // Insert user into DB
+          return models.registeruserIn(username, email, hashedPassword, role)
+            .then(() => {
+              // Generate JWT token
+              const token = jwt.sign(
+                { username, email, role },
+                process.env.JWT_SECRET,
+                { expiresIn: "1h" }
+              );
 
-    const token = jwt.sign(
-      {
-        username, email, role}, 
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" }
-      );
-     res.send("user register succesfullyy",token);
-     res.end();
-  })
-  .catch((err)=>{
-    console.log("error");
-     res.send("user not register");
-  });
-}
+              // Send response
+              return res.send("user data save successfully");
+            });
+        });
+    })
+    .catch((err) => {
+      console.error("Error in PostUser:", err);
+      res.send("User not registered");
+    });
+};

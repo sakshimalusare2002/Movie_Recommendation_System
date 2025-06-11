@@ -117,3 +117,9 @@ nav ul li a:focus {
 .content button:hover {
     background-color: #e8435f;
 }
+
+#role
+{
+  width: 60px;
+  height: 30px;
+}

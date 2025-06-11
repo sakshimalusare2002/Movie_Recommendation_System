@@ -26,6 +26,14 @@
                 <label for="regEmail" class="form-label">Email address</label>
                 <input type="email" class="form-control" id="regEmail" name="email" placeholder="Enter email" required>
               </div>
+               <div class="mb-3">
+                <label for="regRole" class="form-label">Select Role</label>
+                <select class="from-control" name="role" placeholder="choose" style=" width: 200px; height: 30px;"  required >
+                  <option value="" disabled selected>Choose a role</option>
+                  <option value="user">User</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </div>
               <div class="mb-3">
                 <label for="regPassword" class="form-label">Password</label>
                 <input type="password" class="form-control" id="regPassword" name="password" placeholder="Password" required>
