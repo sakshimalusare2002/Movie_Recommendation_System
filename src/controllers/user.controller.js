@@ -1,3 +1,6 @@
+
+let jwt=require("jsonwebtoken");
+let bcrypt=require("bcrypt");
 let models=require("../models/user.model");
 
 
@@ -15,12 +18,25 @@ exports.PostUser=(req,res)=>{
 
   let {username,email,password,role}=req.body;
 
-  models.registeruserIn(username,email,password,role)
+  bcrypt.hash(password,10)
+  .then((hashedPassword)=>{
+    return models.registeruserIn(username,email,password,role)
+  })
+  
   .then((result)=>{
     console.log("user register");
-     res.send("user register succesfullyy");
-  }).catch((err)=>{
+
+    const token = jwt.sign(
+      {
+        username, email, role}, 
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+     res.send("user register succesfullyy",token);
+     res.end();
+  })
+  .catch((err)=>{
     console.log("error");
      res.send("user not register");
-  })
+  });
 }
