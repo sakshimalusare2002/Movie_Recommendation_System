@@ -9,7 +9,7 @@ let app = express();
 app.use(cors());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
-
+app.use(express.static('public'))
 // Correct path to your route file
 let userRoutes = require("./routes/user.routes");
 app.use("/", userRoutes);
