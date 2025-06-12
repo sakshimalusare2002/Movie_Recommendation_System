@@ -47,41 +47,35 @@ exports.PostUser = (req, res) => {
 };
 
 
+//to open the pages after login
 exports.LoginUser = (req, res) => {
   const { email, password } = req.body;
-  console.log("Received login:", email, password); 
 
   models.findUserByEmail(email)
     .then((user) => {
       if (!user) {
-        console.log("User not found");
-        return res.redirect("/loginpage");
+        return res.render("UserLogin.ejs", { msg: "User not found" });
       }
 
       bcrypt.compare(password, user.password)
         .then((isMatch) => {
           if (!isMatch) {
-            console.log("Password mismatch");
-            return res.redirect("/loginpage");
+            return res.render("UserLogin.ejs", { msg: "Incorrect password" });
           }
 
-          console.log("Login successful. User role:", user.role); 
-
-          if (user.role === "admin") {
-            return res.redirect("/adminpage");
-          } else if (user.role === "user") {
-            return res.redirect("/userpage");
+          if (user.role === "ADMIN") {
+           // return res.send("Welcome to admin page");
+           res.render("AdminDashboard.ejs");
+          } else if (user.role === "USER") {
+            //return res.send("Welcome to user page");
+            res.render("userDashboard.ejs")
           } else {
-            console.log("Unknown role");
-            return res.redirect("/loginpage");
+            return res.render("UserLogin.ejs", { msg: "Invalid role" });
           }
         });
     })
     .catch((err) => {
       console.error("Login error:", err);
-      return res.redirect("/loginpage");
+      res.render("UserLogin.ejs", { msg: "Login Error" });
     });
 };
-
-
-
