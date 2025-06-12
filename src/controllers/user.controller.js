@@ -16,10 +16,10 @@ exports.RegistartionPage=(req,res)=>{
 exports.PostUser = (req, res) => {
   const { username, email, password, role } = req.body;
 
-  models.findUserByEmailOrUsername(email, username, role)
+  models.findUserByEmailAndUsername(email, username)
     .then((existingUser) => {
       if (existingUser) {
-        return res.send("User already exists with this role");
+        return res.render("UserRegistration", { msg : "User already exists with this role"});
       }
 
       // Hash password
@@ -36,7 +36,7 @@ exports.PostUser = (req, res) => {
               );
 
               // Send response
-              return res.send("user data save successfully");
+             return res.render("UserRegistration",{msg: "user data save successfully"});
             });
         });
     })
@@ -45,3 +45,43 @@ exports.PostUser = (req, res) => {
       res.send("User not registered");
     });
 };
+
+
+exports.LoginUser = (req, res) => {
+  const { email, password } = req.body;
+  console.log("Received login:", email, password); 
+
+  models.findUserByEmail(email)
+    .then((user) => {
+      if (!user) {
+        console.log("User not found");
+        return res.redirect("/loginpage");
+      }
+
+      bcrypt.compare(password, user.password)
+        .then((isMatch) => {
+          if (!isMatch) {
+            console.log("Password mismatch");
+            return res.redirect("/loginpage");
+          }
+
+          console.log("Login successful. User role:", user.role); 
+
+          if (user.role === "admin") {
+            return res.redirect("/adminpage");
+          } else if (user.role === "user") {
+            return res.redirect("/userpage");
+          } else {
+            console.log("Unknown role");
+            return res.redirect("/loginpage");
+          }
+        });
+    })
+    .catch((err) => {
+      console.error("Login error:", err);
+      return res.redirect("/loginpage");
+    });
+};
+
+
+

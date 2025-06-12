@@ -17,17 +17,18 @@
             <h3>Login</h3>
           </div>
           <div class="card-body">
-            <form>
-              <div class="mb-3">
-                <label for="loginEmail" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="loginEmail" placeholder="Enter email" required>
-              </div>
-              <div class="mb-3">
+            <form action="/login" method="POST">
+             <div class="mb-3">
+               <label for="loginEmail" class="form-label">Email address</label>
+               <input type="email" class="form-control" id="loginEmail" name="email" required>
+             </div>
+             <div class="mb-3">
                 <label for="loginPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
-              </div>
-              <button type="submit" class="btn btn-primary w-100">Login</button>
-            </form>
+                <input type="password" class="form-control" id="loginPassword" name="password" required>
+             </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+          </form>
+
           </div>
           <div class="card-footer text-center">
             <small>Don't have an account? <a href="/registration">Register here</a></small>
