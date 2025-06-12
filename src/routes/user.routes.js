@@ -15,9 +15,5 @@ router.post("/login", userController.LoginUser);
 
 //router.get("/adminpage",adminController.adminPagecontroller);
 
-// router.get("/userpage", (req, res) => {
-//     res.render("UserDashboard");
-// });
-
 
 module.exports = router;
