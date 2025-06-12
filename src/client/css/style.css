@@ -123,3 +123,10 @@ nav ul li a:focus {
   width: 60px;
   height: 30px;
 }
+/* Custom height and width for the entire carousel */
+.carousel-image {
+  width: 100%;         /* Full width */
+  height: 500px;       /* Increase height */
+  object-fit: cover;   /* Maintain aspect ratio without distortion */
+}
+
