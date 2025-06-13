@@ -47,7 +47,7 @@ exports.PostUser = (req, res) => {
 };
 
 
-//to open the pages after login
+//to open the page after login
 exports.LoginUser = (req, res) => {
   const { email, password } = req.body;
 
