@@ -50,7 +50,7 @@ exports.PostUser = (req, res) => {
 //to open the page after login
 exports.LoginUser = (req, res) => {
   const { email, password } = req.body;
-
+//hfyhf
   models.findUserByEmail(email)
     .then((user) => {
       if (!user) {
