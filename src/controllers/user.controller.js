@@ -75,6 +75,6 @@ exports.LoginUser = (req, res) => {
     })
     .catch((err) => {
       console.error("Login error:", err);
-      res.render("UserLogin.ejs", { msg: "Login Error" });
-    });
+      res.render("UserLogin.ejs", { msg: "Login Error" });
+    });
 };
