@@ -8,6 +8,7 @@ const db = require("./config/db");
 let app = express();
 app.set("view engine",'ejs');
 app.set("views", path.join(__dirname, "client"));
+app.use(express.static('public'));
 
 
 app.use(express.static(path.join(__dirname, "client")));
@@ -23,7 +24,7 @@ app.use(bodyparser.urlencoded({ extended: true }));
 let userRoutes = require("./routes/user.routes");
 app.use("/", userRoutes);
 
-let movieRoutes=require("./routes/movie.routes");
-app.use("/movieRoute",movieRoutes);
+let movieRouter=require("./routes/movie.routes");
+app.use("/movies",movieRouter);
 
-module.exports = app;
+module.exports = app;
