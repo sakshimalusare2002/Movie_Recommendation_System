@@ -1,4 +1,3 @@
-
 let jwt=require("jsonwebtoken");
 let bcrypt=require("bcrypt");
 let models=require("../models/user.model");
@@ -76,6 +75,6 @@ exports.LoginUser = (req, res) => {
     })
     .catch((err) => {
       console.error("Login error:", err);
-      res.render("UserLogin.ejs", { msg: "Login Error" });
-    });
+      res.render("UserLogin.ejs", { msg: "Login Error" });
+    });
 };

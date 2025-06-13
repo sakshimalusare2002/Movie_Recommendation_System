@@ -4,8 +4,8 @@ const userController = require("../controllers/user.controller");
 const adminController=require("../controllers/AdminController");
 const movieController=require("../controllers/movie.controller");
 
-// router.get("/add", controller.addMoviePage);
-// router.post("/save", controller.saveMovie);
+router.get("/add", movieController.addMoviePage);
+router.post("/save", movieController.saveMovie);
 
 module.exports=router;
 
