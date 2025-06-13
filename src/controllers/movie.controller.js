@@ -4,6 +4,7 @@ const model = require("../models/movie.model");
 exports.addMoviePage = (req, res) => {
  // res.render("AddMovie.ejs");
  res.render("addmoviePage.ejs");
+
 };
 
 // Store movie data
@@ -21,3 +22,16 @@ exports.saveMovie = (req, res) => {
       res.status(500).send("Error saving movie");
     });
 };
+
+exports.viewSaveMovies = (req, res) => {
+  model.getallMovies()
+    .then((movies) => {
+      res.render("viewMovieDetails", { movies });
+    })
+    .catch((err) => {
+      console.error("Error fetching movies:", err);
+      res.status(500).send("Error saving movie");
+    });
+};
+
+
