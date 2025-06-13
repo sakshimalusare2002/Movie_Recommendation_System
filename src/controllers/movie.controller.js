@@ -22,7 +22,7 @@ exports.saveMovie = (req, res) => {
       res.status(500).send("Error saving movie");
     });
 };
-
+//to display the all movies
 exports.viewSaveMovies = (req, res) => {
   model.getallMovies()
     .then((movies) => {
