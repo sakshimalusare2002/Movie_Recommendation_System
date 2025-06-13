@@ -36,6 +36,8 @@
         <th>Language</th>
         <th>Runtime</th>
         <th>Release Date</th>
+        <th>created_At</th>
+        <th>Updated_At</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -57,6 +59,8 @@
             <td><%= movie.language %></td>
             <td><%= movie.runtime %> min</td>
             <td><%= movie.release_date ? movie.release_date.toISOString().split('T')[0] : 'N/A' %></td>
+            <td><%= movie.created_at ? movie.created_at.toISOString().split('T')[0] : 'N/A' %></td>
+            <td><%= movie.updated_at ? movie.updated_at.toISOString().split('T')[0] : 'N/A' %></td>
             <td>
               <a href="/editmovie/<%= movie.movie_id %>" class="btn btn-sm btn-warning">Edit</a>
               <a href="/deletemovie/<%= movie.movie_id %>" class="btn btn-sm btn-danger">Delete</a>
