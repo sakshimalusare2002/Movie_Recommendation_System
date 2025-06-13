@@ -23,4 +23,7 @@ app.use(bodyparser.urlencoded({ extended: true }));
 let userRoutes = require("./routes/user.routes");
 app.use("/", userRoutes);
 
+let movieRoutes=require("./routes/movie.routes");
+app.use("/movieRoute",movieRoutes);
+
 module.exports = app;
