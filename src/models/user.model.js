@@ -15,7 +15,7 @@ exports.registeruserIn=(username,email,password,role)=>{
         })
     })       
 }
-
+//find the duplicate users in it
 exports.findUserByEmailAndUsername = (email, username) => {
     let sql = "SELECT * FROM users WHERE email = ? OR username = ? " ;
     
@@ -30,6 +30,8 @@ exports.findUserByEmailAndUsername = (email, username) => {
     });
 };
 
+
+//used to check the user login details
 exports.findUserByEmail = (email) => {
   let sql = "SELECT * FROM users WHERE email = ?";
   return new Promise((resolve, reject) => {
@@ -39,4 +41,3 @@ exports.findUserByEmail = (email) => {
     });
   });
 };
-

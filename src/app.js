@@ -20,8 +20,11 @@ app.use(bodyparser.urlencoded({ extended: true }));
 // app.use(express.static('public'))
 
 
-
+//router for admin movie handler
 let userRoutes = require("./routes/user.routes");
 app.use("/", userRoutes);
 
-module.exports = app;
+let movieRouter=require("./routes/movie.routes");
+app.use("/movies",movieRouter);
+
+module.exports = app;
