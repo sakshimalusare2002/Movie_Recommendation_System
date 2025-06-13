@@ -10,3 +10,17 @@ exports.addMovie = (title,description,release_date,genre,director,language,count
     });
   });
 };
+
+exports.getallMovies=()=>{
+    const sql="select * from movies";
+    return new Promise((resolve,reject)=>{
+      db.query(sql,(err,result)=>{
+        if(err){
+          reject(err);
+        }
+        else{
+          resolve(result);
+        }
+      })
+    })
+}

@@ -6,6 +6,8 @@ const movieController=require("../controllers/movie.controller");
 
 router.get("/add", movieController.addMoviePage);
 router.post("/save", movieController.saveMovie);
+router.get("/viewMovies",movieController.viewSaveMovies);
+
 
 module.exports=router;
 
