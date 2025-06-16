@@ -1,14 +1,36 @@
 const db = require("../config/db");
 
-exports.addMovie = (title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url) => {
-  const sql = "INSERT INTO movies (title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+exports.addMovie = (
+  title,
+  description,
+  release_date,
+  genre,
+  director,
+  language,
+  country,
+  budget,
+  revenue,
+  runtime,
+  poster_url,
+  trailer_url,
+  movie_url
+) => {
+  const sql = `INSERT INTO movies 
+    (title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url, movie_url) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
   return new Promise((resolve, reject) => {
-    db.query(sql, [title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url], (err, result) => {
-      if (err) return reject(err);
-      resolve(result);
-    });
+    db.query(
+      sql,
+      [title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url, movie_url],
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      }
+    );
   });
 };
+
 
 exports.getallMovies = () => {
   return new Promise((resolve, reject) => {
@@ -29,10 +51,10 @@ exports.getMovieById = (id) => {
 };
 
 exports.updateMovie = (id, movieData) => {
-  const { title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url } = movieData;
-  const sql = `UPDATE movies SET title = ?, description = ?, release_date = ?, genre = ?, director = ?, language = ?, country = ?, budget = ?, revenue = ?, runtime = ?, poster_url = ?, trailer_url = ? WHERE movie_id = ?`;
+  const { title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url,movie_url } = movieData;
+  const sql = `UPDATE movies SET title = ?, description = ?, release_date = ?, genre = ?, director = ?, language = ?, country = ?, budget = ?, revenue = ?, runtime = ?, poster_url = ?, trailer_url = ? , movie_url=? WHERE movie_id = ?`;
   return new Promise((resolve, reject) => {
-    db.query(sql, [title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url, id], (err, result) => {
+    db.query(sql, [title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url, id,movie_url], (err, result) => {
       if (err) reject(err);
       else resolve(result);
     });
