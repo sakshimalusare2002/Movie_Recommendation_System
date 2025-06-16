@@ -5,9 +5,20 @@ const adminController=require("../controllers/AdminController");
 const movieController=require("../controllers/movie.controller");
 
 router.get("/add", movieController.addMoviePage);
+
+// Save Movie to Database
 router.post("/save", movieController.saveMovie);
-router.get("/viewMovies",movieController.viewSaveMovies);
 
+// View All Movies
+router.get("/viewMovies", movieController.viewSaveMovies);
 
-module.exports=router;
+// Show Edit Movie Form
+router.get("/editmovie/:id", movieController.editMoviePage);
 
+// Update Movie
+router.post("/updatemovie/:id", movieController.updateMovie);
+
+// Delete Movie
+router.get("/deletemovie/:id", movieController.deleteMovie);
+
+module.exports = router;
