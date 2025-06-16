@@ -10,9 +10,19 @@ app.set("view engine",'ejs');
 app.set("views", path.join(__dirname, "client"));
 app.use(express.static('public'));
 
+const session = require('express-session');
 
 app.use(express.static(path.join(__dirname, "client")));
 
+app.use(session({
+  secret: "your-session-secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // true in production with HTTPS
+    maxAge: 1000 * 60 * 60 // 1 hour
+  }
+}));
 
 app.use(cors());
 app.use(bodyparser.json());

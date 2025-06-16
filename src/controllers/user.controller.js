@@ -18,24 +18,32 @@ exports.PostUser = (req, res) => {
   models.findUserByEmailAndUsername(email, username)
     .then((existingUser) => {
       if (existingUser) {
-        return res.render("UserRegistration", { msg : "User already exists with this role"});
+        return res.render("UserRegistration", { msg: "User already exists with this role" });
       }
 
-      // Hash password
+      //  Hash password
       return bcrypt.hash(password, 10)
         .then((hashedPassword) => {
-          // Insert user into DB
+          //  Insert into DB
           return models.registeruserIn(username, email, hashedPassword, role)
             .then(() => {
-              // Generate JWT token
+              // 3️ Generate JWT
               const token = jwt.sign(
                 { username, email, role },
                 process.env.JWT_SECRET,
                 { expiresIn: "1h" }
               );
 
-              // Send response
-             return res.render("UserRegistration",{msg: "user data save successfully"});
+              // 4️ Store JWT + user in session
+              req.session.user = {
+                username,
+                email,
+                role,
+                token
+              };
+
+              // 5️ Send response
+              return res.render("UserRegistration", { msg: "User registered and JWT stored in session" });
             });
         });
     })
@@ -44,6 +52,7 @@ exports.PostUser = (req, res) => {
       res.send("User not registered");
     });
 };
+
 
 
 //to open the page after login
@@ -78,3 +87,12 @@ exports.LoginUser = (req, res) => {
       res.render("UserLogin.ejs", { msg: "Login Error" });
     });
 };
+
+exports.showSession = (req, res) => {
+  if (req.session.user) {
+    res.json(req.session.user); // or render to EJS
+  } else {
+    res.send("No session data found.");
+  }
+};
+
