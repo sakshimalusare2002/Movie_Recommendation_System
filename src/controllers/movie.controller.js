@@ -37,10 +37,18 @@ exports.editMoviePage = (req, res) => {
 
 exports.updateMovie = (req, res) => {
   const id = req.params.id;
+
   model.updateMovie(id, req.body)
-    .then(() => res.redirect("/movies/viewMovies"))
-    .catch(err => res.status(500).send("Error updating movie"));
+    .then(() => {
+      console.log("Movie updated successfully");
+      res.redirect("/movies/viewMovies");
+    })
+    .catch(err => {
+      console.error("Error updating movie:", err);
+      res.status(500).send("Error updating movie");
+    });
 };
+
 
 exports.deleteMovie = (req, res) => {
   const id = req.params.id;
