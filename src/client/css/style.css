@@ -130,3 +130,24 @@ nav ul li a:focus {
   object-fit: cover;   /* Maintain aspect ratio without distortion */
 }
 
+/*icon on view page*/
+  .icon i {
+    font-size: 20px;
+    margin: 0 10px;
+    transition: transform 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+    
+  }
+
+  /* Edit icon hover effect */
+  .icon.edit i:hover {
+    color: #007bff;   /* Blue */
+    transform: scale(1.3);
+  }
+
+  /* Delete icon hover effect */
+  .icon.delete i:hover {
+    color: #dc3545;   /* Red */
+    transform: scale(1.3);
+  }
+

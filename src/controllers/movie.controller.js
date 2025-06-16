@@ -6,8 +6,8 @@ exports.addMoviePage = (req, res) => {
 };
 
 exports.saveMovie = (req, res) => {
-  const { title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url } = req.body;
-  model.addMovie(title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url)
+  const { title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url,movie_url } = req.body;
+  model.addMovie(title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url,movie_url)
     .then(() => res.send("Movie saved successfully"))
     .catch(err => {
       console.error("Error saving movie:", err);
@@ -17,12 +17,16 @@ exports.saveMovie = (req, res) => {
 
 exports.viewSaveMovies = (req, res) => {
   model.getallMovies()
-    .then(movies => res.render("viewMovieDetails.ejs", { movies }))
+    .then(movies => {
+      console.log("Fetched Movies:", movies); // Print to console
+      res.render("viewMovieDetails.ejs", { movies });
+    })
     .catch(err => {
       console.error("Error fetching movies:", err);
       res.status(500).send("Error loading movies");
     });
 };
+
 
 exports.editMoviePage = (req, res) => {
   const id = req.params.id;
@@ -44,4 +48,8 @@ exports.deleteMovie = (req, res) => {
     .then(() => res.redirect("/movies/viewMovies"))
     .catch(err => res.status(500).send("Error deleting movie"));
 };
+
+exports.genre=(req,res)=>{
+    res.send("welcome to genre");
+}
 

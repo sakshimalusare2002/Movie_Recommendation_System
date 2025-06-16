@@ -15,5 +15,6 @@ router.post("/login", userController.LoginUser);
 
 //router.get("/adminpage",adminController.adminPagecontroller);
 
-//adfs
+router.get("/sessioninfo", userController.showSession);
+
 module.exports = router;
