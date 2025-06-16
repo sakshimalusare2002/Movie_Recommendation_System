@@ -29,71 +29,105 @@
   </style>
 </head>
 <body>
-
 <div class="container-fluid">
   <div class="row">
-    
+
     <!-- Sidebar -->
     <div class="col-md-2 left-panel">
       <h4 class="text-center">Admin</h4>
-      <a href="/">Home page</a>
-	    <a href="/movies/add">Add New Movies</a>
-      <a href="/movies/viewMovies">View all Movies</a>
-      <a href="">Users details</a>
-      <a href="">Settings</a>
+      <a href="/">Home</a>
+      <a href="/" class="menu-link" data-type="home">Admin page</a>
+      <a href="/movies/add" class="menu-link" data-type="ajax">Add New Movies</a>
+      <a href="/movies/viewMovies" class="menu-link" data-type="ajax">View all Movies</a>
+      <a href="#">Users details</a>
+      <a href="#">Settings</a>
       <a href="/logout">Logout</a>
     </div>
 
     <!-- Main Content -->
     <div class="col-md-10 main-section">
-      <h2>Welcome, Admin!</h2>
-      <div class="row mt-4">
 
-        <div class="col-md-4">
-          <div class="card bg-primary text-white mb-3">
-            <div class="card-header">Total Users</div>
-            <div class="card-body">
-              <h5>120</h5>
-              <p>Registered users</p>
+      <!-- Dashboard Cards -->
+      <div id="dashboard-box">
+        <h2>Welcome, Admin!</h2>
+        <div class="row mt-4">
+
+          <div class="col-md-4">
+            <div class="card bg-primary text-white mb-3">
+              <div class="card-header">Total Users</div>
+              <div class="card-body">
+                <h5>120</h5>
+                <p>Registered users</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-md-4">
-          <div class="card bg-success text-white mb-3">
-            <div class="card-header">New Signups</div>
-            <div class="card-body">
-              <h5>15</h5>
-              <p>This week</p>
+          <div class="col-md-4">
+            <div class="card bg-success text-white mb-3">
+              <div class="card-header">New Signups</div>
+              <div class="card-body">
+                <h5>15</h5>
+                <p>This week</p>
+              </div>
             </div>
           </div>
-        </div>
 
-         <div class="col-md-4">
-          <div class="card bg-success text-white mb-3">
-            <div class="card-header">New Signups</div>
-            <div class="card-body">
-              <h5>15</h5>
-              <p>This week</p>
+          <div class="col-md-4">
+            <div class="card bg-danger text-white mb-3">
+              <div class="card-header">Issues</div>
+              <div class="card-body">
+                <h5>3</h5>
+                <p>Reported problems</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-md-4">
-          <div class="card bg-danger text-white mb-3">
-            <div class="card-header">Issues</div>
-            <div class="card-body">
-              <h5>3</h5>
-              <p>Reported problems</p>
+          <div class="col-md-4">
+            <div class="card bg-success text-white mb-3">
+              <div class="card-header">Rating</div>
+              <div class="card-body">
+                <h5>50</h5>
+                <p>This week</p>
+              </div>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
-    </div>
 
+      <!-- Dynamic Content Area -->
+      <div id="content-box"></div>
+
+    </div>
   </div>
 </div>
+
+<!-- Script to dynamically load content -->
+<script>
+  document.querySelectorAll(".menu-link").forEach(link => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const url = this.getAttribute("href");
+      const type = this.getAttribute("data-type");
+
+      if (type === "home") {
+        document.getElementById("dashboard-box").style.display = "block";
+        document.getElementById("content-box").innerHTML = "";
+      } else {
+        document.getElementById("dashboard-box").style.display = "none";
+
+        fetch(url)
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("content-box").innerHTML = data;
+          })
+          .catch(err => {
+            document.getElementById("content-box").innerHTML = "<p>Error loading content.</p>";
+          });
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
