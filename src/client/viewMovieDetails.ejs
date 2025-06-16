@@ -34,11 +34,15 @@
         <th>Genre</th>
         <th>Director</th>
         <th>Language</th>
+        <th>Country</th>
         <th>Runtime</th>
         <th>Release Date</th>
         <th>created_At</th>
         <th>Updated_At</th>
-        <th>Actions</th>
+        <th>Trailer</th>
+        <th>Movie</th>
+        <th>Edit</th>
+        <th>Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -48,23 +52,32 @@
             <td><%= movie.movie_id %></td>
             <td>
               <% if (movie.poster_url) { %>
-                <img src="<%= movie.poster_url %>" alt="Poster">
+               <img src="<%=movie.poster_url%>" alt="Poster" width="100">
+
               <% } else { %>
-                <img src="https://via.placeholder.com/60x90" alt="No Image">
+             <img src="https://via.placeholder.com/60x90" alt="No Image">
               <% } %>
+
             </td>
             <td><%= movie.title %></td>
             <td><%= movie.genre %></td>
             <td><%= movie.director %></td>
             <td><%= movie.language %></td>
+            <td><%= movie.country %></td>
             <td><%= movie.runtime %> min</td>
             <td><%= movie.release_date ? movie.release_date.toISOString().split('T')[0] : 'N/A' %></td>
             <td><%= movie.created_at ? movie.created_at.toISOString().split('T')[0] : 'N/A' %></td>
             <td><%= movie.updated_at ? movie.updated_at.toISOString().split('T')[0] : 'N/A' %></td>
+            <td><a href="<%=movie.trailer_url%>" target="_blank">Teaser</a></td>
+            <td><a href="<%=movie.movie_url%>" target="_blank">Movie</a></td>
+
             <td>
-              <a href="/editmovie/<%= movie.movie_id %>" class="btn btn-sm btn-warning">Edit</a>
-              <a href="/deletemovie/<%= movie.movie_id %>" class="btn btn-sm btn-danger">Delete</a>
+              <a href="/movies/editmovie/<%= movie.movie_id %>">Edit</a>
+
+             
             </td>
+            <td>  <a href="/movies/deletemovie/<%= movie.movie_id %>" onclick="return confirm('Are you sure you want to delete this movie?');">Delete</a>
+</td>
           </tr>
         <% }) %>
       <% } else { %>
