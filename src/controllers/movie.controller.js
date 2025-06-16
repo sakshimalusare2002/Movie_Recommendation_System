@@ -2,36 +2,46 @@ const model = require("../models/movie.model");
 
 // Show add movie form
 exports.addMoviePage = (req, res) => {
- // res.render("AddMovie.ejs");
- res.render("addmoviePage.ejs");
-
+  res.render("addmoviePage.ejs");
 };
 
-// Store movie data
 exports.saveMovie = (req, res) => {
-  const { title,description,release_date,genre,director,language,country,budget,revenue,runtime,poster_url,trailer_url } = req.body;
-
-  model.addMovie(title,description,release_date,genre,director,language,country,budget,revenue,runtime,poster_url,trailer_url)
-    .then(() => {
-      //res.render("save", { msg: "Movie added successfully!" });
-      //res.send("movie add ");
-      res.send("movie send succesfully");
-    })
-    .catch((err) => {
+  const { title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url } = req.body;
+  model.addMovie(title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url)
+    .then(() => res.send("Movie saved successfully"))
+    .catch(err => {
       console.error("Error saving movie:", err);
       res.status(500).send("Error saving movie");
     });
 };
-//to display the all movies
+
 exports.viewSaveMovies = (req, res) => {
   model.getallMovies()
-    .then((movies) => {
-      res.render("viewMovieDetails", { movies });
-    })
-    .catch((err) => {
+    .then(movies => res.render("viewMovieDetails.ejs", { movies }))
+    .catch(err => {
       console.error("Error fetching movies:", err);
-      res.status(500).send("Error saving movie");
+      res.status(500).send("Error loading movies");
     });
 };
 
+exports.editMoviePage = (req, res) => {
+  const id = req.params.id;
+  model.getMovieById(id)
+    .then(movie => res.render("editMovies.ejs", { movie }))
+    .catch(err => res.status(500).send("Error loading movie for edit"));
+};
+
+exports.updateMovie = (req, res) => {
+  const id = req.params.id;
+  model.updateMovie(id, req.body)
+    .then(() => res.redirect("/movies/viewMovies"))
+    .catch(err => res.status(500).send("Error updating movie"));
+};
+
+exports.deleteMovie = (req, res) => {
+  const id = req.params.id;
+  model.deleteMovie(id)
+    .then(() => res.redirect("/movies/viewMovies"))
+    .catch(err => res.status(500).send("Error deleting movie"));
+};
 
