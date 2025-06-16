@@ -64,7 +64,7 @@ exports.updateMovie = (id, movieData) => {
       poster_url = ?, trailer_url = ?, movie_url = ?
     WHERE movie_id = ?
   `;
-
+//
   return new Promise((resolve, reject) => {
     db.query(sql, [
       title, description, release_date, genre, director,
