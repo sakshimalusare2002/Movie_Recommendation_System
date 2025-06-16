@@ -15,7 +15,7 @@ const session = require('express-session');
 app.use(express.static(path.join(__dirname, "client")));
 
 app.use(session({
-  secret: "your-session-secret",
+  secret: "thisisaverysecuresecretkey",
   resave: false,
   saveUninitialized: false,
   cookie: {

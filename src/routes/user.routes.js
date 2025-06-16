@@ -13,8 +13,10 @@ router.post("/saveUser",userController.PostUser);
 
 router.post("/login", userController.LoginUser);
 
-//router.get("/adminpage",adminController.adminPagecontroller);
 
-router.get("/sessioninfo", userController.showSession);
+router.get("/check-session", userController.checkSession);
 
+
+
+router.get("/dashboard",userController.UserDashBoard);
 module.exports = router;
