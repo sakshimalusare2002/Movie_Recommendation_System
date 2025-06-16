@@ -35,12 +35,13 @@ exports.PostUser = (req, res) => {
               );
 
               // 4️ Store JWT + user in session
-              req.session.user = {
+                req.session.user = {
                 username,
                 email,
                 role,
                 token
               };
+                  console.log("Session after registration:", req.session);
 
               // 5️ Send response
               return res.render("UserRegistration", { msg: "User registered and JWT stored in session" });
@@ -71,12 +72,24 @@ exports.LoginUser = (req, res) => {
             return res.render("UserLogin.ejs", { msg: "Incorrect password" });
           }
 
+          // ✅ Set session.user after successful login
+          req.session.user = {
+            name: user.username,
+            email: user.email,
+            role: user.role,
+            token: jwt.sign(
+              { email: user.email, role: user.role },
+              process.env.JWT_SECRET,
+              { expiresIn: "1h" }
+            )
+          };
+
+          console.log("Session after login:", req.session);
+
           if (user.role === "ADMIN") {
-           // return res.send("Welcome to admin page");
-           res.render("AdminDashboard.ejs");
+            return res.render("AdminDashboard.ejs", { user: req.session.user });
           } else if (user.role === "USER") {
-            //return res.send("Welcome to user page");
-            res.render("userDashboard.ejs")
+            return res.render("userDashboard.ejs", { user: req.session.user });
           } else {
             return res.render("UserLogin.ejs", { msg: "Invalid role" });
           }
@@ -84,15 +97,29 @@ exports.LoginUser = (req, res) => {
     })
     .catch((err) => {
       console.error("Login error:", err);
-      res.render("UserLogin.ejs", { msg: "Login Error" });
-    });
+      res.render("UserLogin.ejs", { msg: "Login Error" });
+    });
 };
 
-exports.showSession = (req, res) => {
+
+exports.checkSession = (req, res) => {
   if (req.session.user) {
-    res.json(req.session.user); // or render to EJS
+    res.send(`Session is stored. User: ${JSON.stringify(req.session.user)}`);
   } else {
-    res.send("No session data found.");
+    res.send("No session found.");
+  }
+};
+
+
+exports.UserDashBoard = (req, res) => {
+  console.log("Session Data:", req.session); 
+  let user = req.session.user;
+  console.log("Logged-in user from session:", user);
+
+  if (!user) {
+    res.render("UserLogin.ejs", { msg: "Please log in first." });
+  } else {
+    res.render("userDashboard.ejs", { user :req.session.user});
   }
 };
 
