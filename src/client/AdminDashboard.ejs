@@ -26,6 +26,74 @@
     .main-section {
       padding: 20px;
     }
+
+    /* Admin Dashboard Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  padding: 2rem;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.dashboard-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.card {
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  width: 280px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+  text-align: center;
+  margin-left:180px;
+  margin-top:40px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card .card-header {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.5rem;
+}
+
+.card .card-body h5 {
+  font-size: 2.5rem;
+  margin: 0.5rem 0;
+  font-weight: bold;
+}
+
+.card .card-body p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Specific card colors */
+.bg-blue {
+  background-color: #007bff;
+  color: white;
+}
+
+.bg-green {
+  background-color: #28a745;
+  color: white;
+}
+
   </style>
 </head>
 <body>
@@ -36,10 +104,10 @@
     <div class="col-md-2 left-panel">
       <h4 class="text-center">Admin</h4>
       <a href="/">Home</a>
-      <a href="/" class="menu-link" data-type="home">Admin page</a>
+      <a href="/adminDashboard">Admin page</a>
       <a href="/movies/add" class="menu-link" data-type="ajax">Add New Movies</a>
       <a href="/movies/viewMovies" class="menu-link" data-type="ajax">View all Movies</a>
-      <a href="#">Users details</a>
+      <a href="/userlist">Users details</a>
       <a href="#">Settings</a>
       <a href="/logout">Logout</a>
     </div>
@@ -49,49 +117,35 @@
 
       <!-- Dashboard Cards -->
       <div id="dashboard-box">
-        <h2>Welcome, Admin!</h2>
+        <h2 style="text-align: center;">Welcome, Admin!</h2>
         <div class="row mt-4">
 
-          <div class="col-md-4">
-            <div class="card bg-primary text-white mb-3">
-              <div class="card-header">Total Users</div>
-              <div class="card-body">
-                <h5>120</h5>
-                <p>Registered users</p>
-              </div>
-            </div>
-          </div>
+          <div class="row">
+  <!-- Total Users Card -->
+  <div class="col-md-6 mb-4">
+    <div class="card text-white bg-primary shadow rounded">
+      <div class="card-header text-center font-weight-bold">Total Users</div>
+      <div class="card-body text-center">
+        <h5 class="display-4"><%= typeof totalUsers !== 'undefined' ? totalUsers : 0 %></h5>
+        <p class="mb-0">Registered Users</p>
+      </div>
+    </div>
+  </div>
 
-          <div class="col-md-4">
-            <div class="card bg-success text-white mb-3">
-              <div class="card-header">New Signups</div>
-              <div class="card-body">
-                <h5>15</h5>
-                <p>This week</p>
-              </div>
-            </div>
-          </div>
+  <!-- Login Attempts Card -->
+  <div class="col-md-6 mb-4">
+    <div class="card text-white bg-success shadow rounded">
+      <div class="card-header text-center font-weight-bold">Login Attempts</div>
+      <div class="card-body text-center">
+        <h5 class="display-4"><%= typeof totalLogins !== 'undefined' ? totalLogins : 0 %></h5>
+        <p class="mb-0">Overall Login Attempts</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-          <div class="col-md-4">
-            <div class="card bg-danger text-white mb-3">
-              <div class="card-header">Issues</div>
-              <div class="card-body">
-                <h5>3</h5>
-                <p>Reported problems</p>
-              </div>
-            </div>
-          </div>
 
-          <div class="col-md-4">
-            <div class="card bg-success text-white mb-3">
-              <div class="card-header">Rating</div>
-              <div class="card-body">
-                <h5>50</h5>
-                <p>This week</p>
-              </div>
-            </div>
-          </div>
-
+          
         </div>
       </div>
 

@@ -23,4 +23,9 @@ router.get("/aboutus",userController.AboutUs);
 
 router.post("/logout", userController.logoutUser);
 
+router.get('/adminDashboard', userController.adminDashboard);
+
+router.get("/userlist",userController.viewUsers);
+
+
 module.exports = router;

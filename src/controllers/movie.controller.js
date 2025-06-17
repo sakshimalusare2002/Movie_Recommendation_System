@@ -18,7 +18,7 @@ exports.saveMovie = (req, res) => {
 exports.viewSaveMovies = (req, res) => {
   model.getallMovies()
     .then(movies => {
-      console.log("Fetched Movies:", movies); // Print to console
+      //console.log("Fetched Movies:", movies); // Print to console
       res.render("viewMovieDetails.ejs", { movies });
     })
     .catch(err => {
@@ -61,3 +61,21 @@ exports.genre=(req,res)=>{
     res.send("welcome to genre");
 }
 
+exports.adminDashboard=(req,res)=>{
+    let userCountQuery='select count(*)as totalUsers from users';
+    let loginCountQuery='select sum(login_count)as totalLogins from users';
+
+
+    models.getUserAndLoginCounts(userCountQuery,loginCountQuery).then(({ totalUsers, totalLogins }) => {
+      res.render("AdminDashboard", {
+        user: req.session.user,
+        totalUsers,
+        totalLogins
+      });
+    })
+    .catch((err) => {
+      console.error("Error loading dashboard:", err);
+      res.status(500).send("Dashboard error");
+    });
+};
+        
