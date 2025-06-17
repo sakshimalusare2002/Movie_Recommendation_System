@@ -20,4 +20,7 @@ router.get("/services",userController.servicepage);
 
 router.get("/dashboard",userController.UserDashBoard);
 router.get("/aboutus",userController.AboutUs);
+
+router.post("/logout", userController.logoutUser);
+
 module.exports = router;

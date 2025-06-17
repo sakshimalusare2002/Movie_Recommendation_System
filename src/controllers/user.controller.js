@@ -130,3 +130,13 @@ exports.servicepage=(req,res)=>{
 exports.AboutUs=(req,res)=>{
   res.render("aboutus.ejs");
 }
+
+exports.logoutUser = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Logout error:", err);
+      return res.render("Could not log out.");
+    }
+    res.redirect("/"); // Redirect to homepage
+  });
+};
