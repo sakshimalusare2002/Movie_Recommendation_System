@@ -184,6 +184,23 @@
     <main class="content-area">
       <h3>Welcome to your dashboard</h3>
       <p>Your personalized movie recommendations will appear here.</p>
+      <div class="row">
+  <% if (movies && movies.length > 0) { %>
+    <% movies.forEach((movie) => { %>
+      <div class="col-md-3 mb-4">
+        <div class="card h-100 shadow">
+          <img src="<%= movie.poster_url %>" class="card-img-top" alt="Movie Poster" style="height: 300px; object-fit: cover;">
+          <div class="card-body">
+            <h5 class="card-title"><%= movie.title %></h5>
+            <p class="card-text"><%= movie.genre %></p>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  <% } else { %>
+    <p>No movies available</p>
+  <% } %>
+</div>
     </main>
   </div>
 </div>
