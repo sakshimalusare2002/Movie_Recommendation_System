@@ -42,6 +42,7 @@ exports.findUserByEmail = (email) => {
   });
 };
 
+
 exports.incrementLoginCount = (email) => {
   return new Promise((resolve, reject) => {
     const sql = `UPDATE users SET login_count = login_count + 1 WHERE email = ?`;
@@ -83,5 +84,6 @@ exports.viewUseList=()=>{
         })
     })
 }
+
 
 

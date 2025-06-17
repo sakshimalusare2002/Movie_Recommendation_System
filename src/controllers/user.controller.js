@@ -1,7 +1,7 @@
 let jwt=require("jsonwebtoken");
 let bcrypt=require("bcrypt");
 let models=require("../models/user.model");
-
+const movieModel = require("../models/movie.model");
 
 exports.getProfile = (req, res) => {
   res.render("index.ejs")
@@ -74,6 +74,7 @@ exports.LoginUser = (req, res) => {
 
           models.incrementLoginCount(email);
           //  Set session.user after successful login
+
           req.session.user = {
             name: user.username,
             email: user.email,
@@ -90,7 +91,22 @@ exports.LoginUser = (req, res) => {
           if (user.role === "ADMIN") {
             return res.render("AdminDashboard.ejs", { user: req.session.user });
           } else if (user.role === "USER") {
-            return res.render("userDashboard.ejs", { user: req.session.user });
+            // 🔥 FIX: Fetch movies before rendering dashboard
+            movieModel.getAllMovies((err, movies) => {
+              if (err) {
+                console.error("Error fetching movies:", err);
+                return res.render("userDashboard.ejs", {
+                  user: req.session.user,
+                  movies: [],
+                  msg: "Could not fetch movies"
+                });
+              }
+
+              res.render("userDashboard.ejs", {
+                user: req.session.user,
+                movies
+              });
+            });
           } else {
             return res.render("UserLogin.ejs", { msg: "Invalid role" });
           }
@@ -112,17 +128,32 @@ exports.checkSession = (req, res) => {
 };
 
 
+
 exports.UserDashBoard = (req, res) => {
- // console.log("Session Data:", req.session); 
+
   let user = req.session.user;
-  console.log("Logged-in user from session:", user);
 
   if (!user) {
-    res.render("UserLogin.ejs", { msg: "Please log in first." });
-  } else {
-    res.render("userDashboard.ejs", { user :req.session.user});
+    return res.render("UserLogin.ejs", { msg: "Please log in first." });
   }
+
+  movieModel.getAllMovies((err, movies) => {
+    if (err) {
+      console.error("Error fetching movies:", err);
+      return res.render("userDashboard.ejs", {
+        user,
+        movies: [],
+        msg: "Could not fetch movies"
+      });
+    }
+
+    res.render("userDashboard.ejs", {
+      user,
+      movies
+    });
+  });
 };
+
 
 exports.servicepage=(req,res)=>{
     res.render("service.ejs");
