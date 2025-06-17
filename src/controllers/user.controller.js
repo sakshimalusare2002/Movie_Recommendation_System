@@ -72,6 +72,9 @@ exports.LoginUser = (req, res) => {
             return res.render("UserLogin.ejs", { msg: "Incorrect password" });
           }
 
+          models.incrementLoginCount(email);
+          //  Set session.user after successful login
+
           req.session.user = {
             name: user.username,
             email: user.email,
@@ -83,7 +86,7 @@ exports.LoginUser = (req, res) => {
             )
           };
 
-          console.log("Session after login:", req.session);
+         // console.log("Session after login:", req.session);
 
           if (user.role === "ADMIN") {
             return res.render("AdminDashboard.ejs", { user: req.session.user });
@@ -127,6 +130,7 @@ exports.checkSession = (req, res) => {
 
 
 exports.UserDashBoard = (req, res) => {
+
   let user = req.session.user;
 
   if (!user) {
@@ -168,3 +172,38 @@ exports.logoutUser = (req, res) => {
     res.redirect("/"); // Redirect to homepage
   });
 };
+
+exports.adminDashboard = (req, res) => {
+  let userCountQuery = 'SELECT COUNT(*) AS totalUsers FROM users';
+  let loginCountQuery = 'SELECT SUM(login_count) AS totalLogins FROM users';
+
+  models.getUserAndLoginCounts(userCountQuery, loginCountQuery)
+    .then((result) => {
+      
+        const { totalUsers, totalLogins } = result;
+
+     
+      console.log("Total Users:", totalUsers);
+      console.log("Total Logins:", totalLogins);
+
+      res.render("AdminDashboard", {
+        user: req.session.user,
+        totalUsers: result.totalUsers,   
+        totalLogins: result.totalLogins  
+      });
+    })
+    .catch((err) => {
+      console.error("Error loading dashboard:", err);
+      res.status(500).send("Dashboard error");
+    });
+};
+
+exports.viewUsers=(req,res)=>{
+        models.viewUseList().then((result)=>{
+          res.render("userList", {
+           users: result   
+      });
+        }).catch(()=>{
+          console.log(err)
+        })
+}
