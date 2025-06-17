@@ -123,3 +123,10 @@ exports.UserDashBoard = (req, res) => {
   }
 };
 
+exports.servicepage=(req,res)=>{
+    res.render("service.ejs");
+}
+
+exports.AboutUs=(req,res)=>{
+  res.render("aboutus.ejs");
+}

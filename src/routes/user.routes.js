@@ -16,7 +16,8 @@ router.post("/login", userController.LoginUser);
 
 router.get("/check-session", userController.checkSession);
 
-
+router.get("/services",userController.servicepage);
 
 router.get("/dashboard",userController.UserDashBoard);
+router.get("/aboutus",userController.AboutUs);
 module.exports = router;
