@@ -79,7 +79,6 @@
       width: 300px;
     }
 
-    /* Profile dropdown */
     .profile-dropdown {
       position: relative;
     }
@@ -141,28 +140,111 @@
       background-color: #f9f9fb;
       flex-grow: 1;
     }
+
+    .movie-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .movie-card {
+      position: relative;
+      width: calc(100% / 6 - 20px);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .poster-wrapper {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .movie-poster {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: 0.3s ease;
+    }
+
+    .overlay {
+      position: absolute;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      width: 100%;
+      padding: 12px;
+      transition: 0.3s ease;
+      opacity: 0;
+      transform: translateY(100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .movie-card:hover .overlay {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .movie-title {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .overlay-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .overlay-buttons .btn {
+      padding: 8px 12px;
+      font-size: 13px;
+      border: none;
+      background: #ffffff;
+      color: #000;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .overlay-buttons .btn:hover {
+      background: #e2e2e2;
+    }
+
+    .overlay-buttons form {
+      margin: 0;
+      width: 100%;
+    }
+
+    .overlay-buttons form button {
+      width: 100%;
+    }
   </style>
 </head>
 <body>
-
 <div class="dashboard">
-
-  <!-- Sidebar -->
   <nav class="sidebar">
-    <h2>🎬 MyMovies</h2>
+    <h2>🎮 MyMovies</h2>
     <a href="#" class="nav-link active"><span class="material-icons">stars</span> Recommendations</a>
     <a href="#" class="nav-link"><span class="material-icons">video_library</span> Library</a>
     <a href="#" class="nav-link"><span class="material-icons">favorite</span> Liked</a>
     <a href="#" class="nav-link"><span class="material-icons">history</span> Recently Watched</a>
   </nav>
 
-  <!-- Main Area -->
   <div class="main">
-
-    <!-- Topbar -->
     <header class="topbar">
       <input type="text" class="search-input" placeholder="Search movies by title or genre" />
-
       <% if (user) { %>
       <div class="profile-dropdown" tabindex="0">
         <button class="profile-btn">
@@ -180,27 +262,33 @@
       <% } %>
     </header>
 
-    <!-- Content Area-->
     <main class="content-area">
       <h3>Welcome to your dashboard</h3>
       <p>Your personalized movie recommendations will appear here.</p>
-      <div class="row">
-  <% if (movies && movies.length > 0) { %>
-    <% movies.forEach((movie) => { %>
-      <div class="col-md-3 mb-4">
-        <div class="card h-100 shadow">
-          <img src="<%= movie.poster_url %>" class="card-img-top" alt="Movie Poster" style="height: 300px; object-fit: cover;">
-          <div class="card-body">
-            <h5 class="card-title"><%= movie.title %></h5>
-            <p class="card-text"><%= movie.genre %></p>
-          </div>
-        </div>
+
+      <div class="movie-grid">
+        <% if (movies && movies.length > 0) { %>
+          <% movies.forEach((movie) => { %>
+            <div class="movie-card">
+              <div class="poster-wrapper">
+                <img src="<%= movie.poster_url %>" class="movie-poster" alt="Movie Poster">
+                <div class="overlay">
+                  <h5 class="movie-title"><%= movie.title %></h5>
+                  <div class="overlay-buttons">
+                    <a href="<%= movie.trailer_url %>" target="_blank" class="btn">Trailer</a>
+                    <a href="<%= movie.movie_url || '#' %>" class="btn">Watch Movie</a>
+                    <form action="/watchlist/add/<%= movie.movie_id %>" method="POST">
+                      <button type="submit" class="btn">Watchlist</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <p>No movies available</p>
+        <% } %>
       </div>
-    <% }); %>
-  <% } else { %>
-    <p>No movies available</p>
-  <% } %>
-</div>
     </main>
   </div>
 </div>

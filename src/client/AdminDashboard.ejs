@@ -103,12 +103,12 @@ h2 {
     <!-- Sidebar -->
     <div class="col-md-2 left-panel">
       <h4 class="text-center">Admin</h4>
-      <a href="/">Home</a>
+      <!-- <a href="/">Home</a> -->
       <a href="/adminDashboard">Admin page</a>
       <a href="/movies/add" class="menu-link" data-type="ajax">Add New Movies</a>
       <a href="/movies/viewMovies" class="menu-link" data-type="ajax">View all Movies</a>
       <a href="/userlist" class="menu-link" data-type="ajax">Users details</a>
-      <a href="/logout">Logout</a>
+      <a href="/movies/logoutAdmin" onclick="return confirmLogout()">Logout</a>
     </div>
 
     <!-- Main Content -->
@@ -181,6 +181,10 @@ h2 {
     });
   });
 </script>
-
+<script>
+  function confirmLogout() {
+    return confirm("Are you sure you want to logout?");
+  }
+</script>
 </body>
 </html>
