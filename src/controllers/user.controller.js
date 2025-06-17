@@ -86,7 +86,7 @@ exports.LoginUser = (req, res) => {
             )
           };
 
-         // console.log("Session after login:", req.session);
+          console.log("Session after login:", req.session);
 
           if (user.role === "ADMIN") {
             return res.render("AdminDashboard.ejs", { user: req.session.user });
