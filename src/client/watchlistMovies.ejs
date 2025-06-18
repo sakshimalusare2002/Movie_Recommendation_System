@@ -7,10 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -18,12 +15,7 @@
       color: #333;
     }
 
-    .dashboard {
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
+    .dashboard { display: flex; height: 100vh; overflow: hidden; }
     .sidebar {
       width: 240px;
       background-color: #1f1f2e;
@@ -33,12 +25,7 @@
       flex-direction: column;
     }
 
-    .sidebar h2 {
-      text-align: center;
-      color: #fff;
-      margin-bottom: 20px;
-    }
-
+    .sidebar h2 { text-align: center; color: #fff; margin-bottom: 20px; }
     .nav-link {
       color: #ddd;
       text-decoration: none;
@@ -56,12 +43,7 @@
       color: #fff;
     }
 
-    .main {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
+    .main { flex-grow: 1; display: flex; flex-direction: column; }
     .topbar {
       height: 60px;
       background-color: #fff;
@@ -116,12 +98,7 @@
       display: block;
     }
 
-    .profile-content p {
-      margin: 4px 0;
-      font-size: 0.9rem;
-      color: #333;
-    }
-
+    .profile-content p { margin: 4px 0; font-size: 0.9rem; color: #333; }
     .logout-btn {
       margin-top: 8px;
       padding: 6px 12px;
@@ -169,16 +146,8 @@
       margin-bottom: 10px;
     }
 
-    .movie-card h3 {
-      margin: 0;
-      font-size: 18px;
-      color: #222;
-    }
-
-    .movie-card p {
-      margin: 5px 0;
-      color: #666;
-    }
+    .movie-card h3 { margin: 0; font-size: 18px; color: #222; }
+    .movie-card p { margin: 5px 0; color: #666; }
 
     .movie-card a.watch-btn {
       display: inline-block;
@@ -194,6 +163,21 @@
     .movie-card a.watch-btn:hover {
       background-color: #2980b9;
     }
+
+    .remove-btn {
+      margin-top: 6px;
+      padding: 6px 10px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .remove-btn:hover {
+      background-color: #c0392b;
+    }
   </style>
 </head>
 <body>
@@ -201,8 +185,11 @@
     <!-- Sidebar -->
     <nav class="sidebar">
       <h2>🎮 MyMovies</h2>
-      <a href="/watchlistpage/watlistmovies" class="nav-link active"><span class="material-icons">stars</span><span><%= user.name %>'s Watchlist</span></a>
-      <a href="/library" class="nav-link"><span class="material-icons">video_library</span> Library</a>
+      <a href="/userDashboard" class="nav-link"><span class="material-icons">video_library</span>Recommendations</a>
+      <a href="/watchlistpage/watlistmovies" class="nav-link active">
+        <span class="material-icons">stars</span><span><%= user.name %>'s Watchlist</span>
+      </a>
+
       <a href="/liked" class="nav-link"><span class="material-icons">favorite</span> Liked</a>
       <a href="/recent" class="nav-link"><span class="material-icons">history</span> Recently Watched</a>
     </nav>
@@ -243,6 +230,12 @@
                 <h3><%= movie.title %></h3>
                 <p><%= movie.genre %></p>
                 <a href="<%= movie.movie_url %>" target="_blank" class="watch-btn">▶️ Watch Now</a>
+
+                <!-- Remove from Watchlist Form -->
+                <form action="/watchlistpage/watchlist/remove" method="POST" onclick="return confirm('Are you sure you wnat to Remove this movie From the Watchlist..')">
+                  <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
+                  <button type="submit" class="remove-btn">🗑️ Remove</button>
+                </form>
               </div>
             <% }) %>
           <% } else { %>
