@@ -52,3 +52,15 @@ exports.getwatlistMovies = (user_id) => {
     });
   });
 };
+
+
+
+exports.removeFromWatchlist = (user_id, movie_id) => {
+  return new Promise((resolve, reject) => {
+    const sql = "DELETE FROM watchlist WHERE user_id = ? AND movie_id = ?";
+    db.query(sql, [user_id, movie_id], (err, result) => {
+      if (err) return reject(err);
+      resolve();
+    });
+  });
+};

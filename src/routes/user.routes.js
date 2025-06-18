@@ -27,5 +27,6 @@ router.get('/adminDashboard', userController.adminDashboard);
 
 router.get("/userlist",userController.viewUsers);
 
+router.get("/userDashboard", userController.UserDashBoard);
 
 module.exports = router;

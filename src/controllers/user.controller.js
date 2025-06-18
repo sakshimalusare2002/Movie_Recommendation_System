@@ -210,3 +210,27 @@ exports.viewUsers=(req,res)=>{
           console.log(err)
         })
 }
+
+exports.UserDashBoard = (req, res) => {
+  let user = req.session.user;
+
+  if (!user) {
+    return res.render("UserLogin.ejs", { msg: "Please log in first." });
+  }
+
+  movieModel.getAllMovies((err, movies) => {
+    if (err) {
+      console.error("Error fetching movies:", err);
+      return res.render("userDashboard.ejs", {
+        user,
+        movies: [],
+        msg: "Could not fetch movies"
+      });
+    }
+
+    res.render("userDashboard.ejs", {
+      user,
+      movies
+    });
+  });
+};
