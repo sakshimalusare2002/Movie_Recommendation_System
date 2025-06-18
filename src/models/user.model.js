@@ -33,7 +33,7 @@ exports.findUserByEmailAndUsername = (email, username) => {
 
 //used to check the user login details
 exports.findUserByEmail = (email) => {
-  let sql = "SELECT * FROM users WHERE email = ?";
+  let sql = "SELECT user_id, username, email, password, role FROM users WHERE email = ?";
   return new Promise((resolve, reject) => {
     db.query(sql, [email], (err, result) => {
       if (err) return reject(err);
