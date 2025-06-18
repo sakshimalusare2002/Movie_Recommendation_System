@@ -53,3 +53,4 @@ CREATE TABLE recommendations (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (movie_id) REFERENCES movies(movie_id) ON DELETE CASCADE
 );
+alter table users  add login_count int default 0;

@@ -37,4 +37,11 @@ app.use("/", userRoutes);
 let movieRouter=require("./routes/movie.routes");
 app.use("/movies",movieRouter);
 
+
+
+let watchlist=require("./routes/watchlist.routes");
+
+app.use("/watchlistpage",watchlist);
+
 module.exports = app;
+

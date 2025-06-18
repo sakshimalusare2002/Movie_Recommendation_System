@@ -62,6 +62,8 @@ exports.LoginUser = (req, res) => {
 
   models.findUserByEmail(email)
     .then((user) => {
+      console.log("Logged-in user object:", user);
+
       if (!user) {
         return res.render("UserLogin.ejs", { msg: "User not found" });
       }
@@ -76,6 +78,7 @@ exports.LoginUser = (req, res) => {
           //  Set session.user after successful login
 
           req.session.user = {
+            user_id:user.user_id,
             name: user.username,
             email: user.email,
             role: user.role,
@@ -86,7 +89,7 @@ exports.LoginUser = (req, res) => {
             )
           };
 
-         // console.log("Session after login:", req.session);
+          console.log("Session after login:", req.session);
 
           if (user.role === "ADMIN") {
             return res.render("AdminDashboard.ejs", { user: req.session.user });
