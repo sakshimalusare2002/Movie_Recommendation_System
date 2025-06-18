@@ -40,6 +40,6 @@ app.use("/movies",movieRouter);
 
 
 let watchlist=require("./routes/watchlist.routes");
-app.use("/watchlistpage",watchlist);
+app.use("/watchlistpage", watchlist);
 module.exports = app;
 

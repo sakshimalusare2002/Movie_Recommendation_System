@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
 let watchlist=require("../controllers/watchlistController");
-router.get("/page", watchlist.watchlistPage);
+router.get("/", watchlist.watchlistPage);
 
 
-router.post("/addWatchlist",watchlist.insertToWatchList);
+// router.post('/addWatchlist/:movieId', watchlist.insertToWatchList);
+router.post('/addWatchlist', watchlist.insertToWatchList);
+
+router.get("/watlistmovies",watchlist.getWatchListMovies);
 module.exports=router;

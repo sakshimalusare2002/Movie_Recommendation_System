@@ -231,6 +231,8 @@
       width: 100%;
     }
   </style>
+  
+
 </head>
 <body>
 <div class="dashboard">
@@ -238,7 +240,8 @@
 
  
     <h2>🎮 MyMovies</h2>
-    <a href="#" class="nav-link active"><span class="material-icons">stars</span> Recommendations</a>
+    <a href="/watchlistpage/watlistmovies" class="nav-link active"><span class="material-icons">stars</span><h2><%= user.name %>'s Watchlist</h2>
+</a>
 
     <a href="#" class="nav-link"><span class="material-icons">video_library</span> Library</a>
     <a href="#" class="nav-link"><span class="material-icons">favorite</span> Liked</a>
@@ -279,10 +282,14 @@
                   <h5 class="movie-title"><%= movie.title %></h5>
                   <div class="overlay-buttons">
                     <a href="<%= movie.trailer_url %>" target="_blank" class="btn">Trailer</a>
+                    
                     <a href="<%= movie.movie_url || '#' %>" class="btn">Watch Movie</a>
-                    <form action="/watchlist/add/<%= movie.movie_id %>" method="POST">
-                      <button type="submit" class="btn">Watchlist</button>
+
+                    <form action="/watchlistpage/addWatchlist" method="POST">
+                    <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
+                    <button type="submit" class="btn btn-primary">Add to Watchlist</button>
                     </form>
+
                   </div>
                 </div>
               </div>
@@ -293,6 +300,18 @@
         <% } %>
       </div>
     </main>
+  <% if (typeof added !== 'undefined' && added !== null) { %>
+  <script>
+    <% if (added === 'true') { %>
+      alert("✅ Movie added successfully to watchlist!");
+    <% } else if (added === 'duplicate') { %>
+      alert("⚠️ You already added this movie to your watchlist!");
+    <% } %>
+  </script>
+<% } %>
+
+
+
   </div>
 </div>
 </body>
