@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Movie Recommendation System</title>
+  <title>User Dashboard - Movie Recommendation</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-<<<<<<< Updated upstream
 
   <style>
     * {
@@ -241,8 +240,7 @@
 
  
     <h2>🎮 MyMovies</h2>
-    <a href="/watchlistpage/watlistmovies" class="nav-link active"><span class="material-icons">stars</span><h2><%= user.name %>'s Watchlist</h2>
-</a>
+    <a href="/watchlistpage/watlistmovies" class="nav-link active"><span class="material-icons">stars</span><h2><%= user.name %>'s Watchlist</h2></a>
 
     <a href="#" class="nav-link"><span class="material-icons">video_library</span> Library</a>
     <a href="#" class="nav-link"><span class="material-icons">favorite</span> Liked</a>
@@ -257,69 +255,15 @@
         <button class="profile-btn">
           <span class="material-icons">account_circle</span>
           <%= user.name %>
-=======
-  <link rel="stylesheet" href="./css/userDashboard.css">
- 
-</head>
-<body>
-  <div class="app-container" role="main" aria-label="Movie Recommendation Application">
-    <!-- Left navigation -->
-    <nav class="sidebar" aria-label="Main navigation">
-      <h2>MyMovies</h2>
-      <div class="nav-links" role="list">
-        <a href="#" class="nav-link active" data-section="recommendations" role="listitem" aria-current="page">
-          <span class="material-icons" aria-hidden="true">stars</span> Recommendations
-        </a>
-        <a href="/watchlistpage/page" class="nav-link" data-section="library" role="listitem">
-          <span class="material-icons" aria-hidden="true">video_library</span> WatchList
-        </a>
-        <a href="#" class="nav-link" data-section="liked" role="listitem">
-          <span class="material-icons" aria-hidden="true">favorite</span> Liked
-        </a>
-        <a href="#" class="nav-link" data-section="recently-watched" role="listitem">
-          <span class="material-icons" aria-hidden="true">history</span> Recently Watched
-        </a>
-      </div>
-
-      
-      <div style="margin-top: auto; padding: 16px; border-top: 1px solid #444;">
-        <% if (user) { %>
-          <p style="margin: 0; font-weight: 600;">👤 <%= user.name %></p>
-          <p style="margin: 0; font-size: 0.85rem; color: #aaa;"><%= user.email %></p>
-        <% } else { %>
-          <p style="margin: 0;">Not Logged In</p>
-        <% } %>
-      </div>
-    </nav>
-
-    <!-- Main area -->
-    <div style="display:flex; flex-direction: column; height: 100vh; overflow: hidden;">
-      <!-- Search bar -->
-      <header class="searchbar" role="search">
-        <span class="material-icons" aria-hidden="true">search</span>
-        <input type="search" id="searchInput" placeholder="Search movies by title or genre" aria-label="Search movies" autocomplete="off" />
-      </header>
-      
-      <!-- Content in scrollable main -->
-      <main class="content-area" tabindex="0" role="region" aria-live="polite" aria-atomic="true">
-        <!-- Sections will be populated here dynamically -->
-      </main>
-    </div>
-
-    <!-- Right side details panel -->
-    <aside class="details-panel" aria-label="Movie details panel" tabindex="0" hidden>
-      <h2 id="detailTitle">Select a movie</h2>
-            
-      <div class="buttons">
-        <button class="btn" id="btnLike" aria-pressed="false" aria-label="Like this movie">
-          <span class="material-icons" aria-hidden="true">favorite_border</span> Like
         </button>
-        <button class="btn" id="btnWatch" aria-pressed="false" aria-label="Mark this movie as watched">
-          <span class="material-icons" aria-hidden="true">visibility</span> Mark Watched
->>>>>>> Stashed changes
-        </button>
+        <div class="profile-content">
+          <p><strong><%= user.name %></strong></p>
+          <p><%= user.email %></p>
+          <form action="/logout" method="POST" onsubmit="return confirm('Are you sure you want to logout the account?');">
+            <button class="logout-btn" type="submit">Logout</button>
+          </form>
+        </div>
       </div>
-<<<<<<< Updated upstream
       <% } %>
     </header>
 
@@ -367,9 +311,7 @@
 
 
 
-=======
-    </aside>
->>>>>>> Stashed changes
   </div>
+</div>
 </body>
 </html>
