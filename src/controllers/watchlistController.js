@@ -1,6 +1,4 @@
 
-
-
 let movieModel = require("../models/watchlist.model");
 
 
@@ -63,7 +61,6 @@ exports.getWatchListMovies = (req, res) => {
       res.status(500).send("Error loading watchlist");
     });
 };
-
 
 
 
