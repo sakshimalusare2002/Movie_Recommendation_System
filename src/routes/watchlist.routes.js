@@ -13,5 +13,7 @@ router.get("/watlistmovies",watchlist.getWatchListMovies);
 
 // router.get("/page",watchlist.insertToWatchList);
 
+router.post('/watchlist/remove', watchlist.removeFromWatchlist);
+
 
 module.exports=router;

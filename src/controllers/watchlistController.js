@@ -1,22 +1,21 @@
-
 let movieModel = require("../models/watchlist.model");
 
-
+// Show the main dashboard with movies
 exports.watchlistPage = (req, res) => {
   const user = req.session.user || { user_id: 1 };
-  const added = req.query.added;
+
+  const added = req.session.added; // 🌟 get message
+  req.session.added = null;        // 🌟 clear it after use
 
   movieModel.getAllMovies()
     .then((movies) => {
-      res.render("userDashboard", { movies, user, added }); //  pass added
-    }).catch((err)=>{
-      res.status(500).send("error fetching movies");
-    })
+      res.render("userDashboard", { movies, user, added });
+    }).catch((err) => {
+      res.status(500).send("Error fetching movies");
+    });
 };
 
-
-
-// POST method to add to watchlist
+// POST: Add to Watchlist
 exports.insertToWatchList = (req, res) => {
   const movie_id = req.body.movie_id;
   const user_id = req.session.user?.user_id;
@@ -28,12 +27,14 @@ exports.insertToWatchList = (req, res) => {
   movieModel.checkWatchlistExists(user_id, movie_id)
     .then((exists) => {
       if (exists) {
-        // Already exists, redirect with ?added=duplicate
-        res.redirect("/watchlistpage?added=duplicate");
+        req.session.added = 'duplicate'; // ⚠️ already added
+        res.redirect("/watchlistpage");
       } else {
-        return movieModel.addTowatchlist(user_id, movie_id).then(() => {
-          res.redirect("/watchlistpage?added=true");
-        });
+        return movieModel.addTowatchlist(user_id, movie_id)
+          .then(() => {
+            req.session.added = 'true'; // ✅ successfully added
+            res.redirect("/watchlistpage");
+          });
       }
     })
     .catch((err) => {
@@ -42,19 +43,17 @@ exports.insertToWatchList = (req, res) => {
     });
 };
 
-// watchlistController.js
-
+// GET: Movies from Watchlist
 exports.getWatchListMovies = (req, res) => {
-  const user = req.session.user; // ✅ STEP 1: Get user from session
+  const user = req.session.user;
 
-  if (!user || !user.user_id) { // ✅ STEP 2: Check if user is logged in
-    return res.redirect("/?form=login"); // or send 401 Unauthorized
+  if (!user || !user.user_id) {
+    return res.redirect("/?form=login");
   }
 
-  movieModel.getwatlistMovies(user.user_id) // ✅ STEP 3: Pass user_id
+  movieModel.getwatlistMovies(user.user_id)
     .then((movies) => {
-       console.log(movies); // Debug: Check if movie_url exists
-      res.render("watchlistMovies.ejs", { movies, user }); // ✅ STEP 4: Pass user to EJS
+      res.render("watchlistMovies.ejs", { movies, user });
     })
     .catch((err) => {
       console.error("Error loading watchlist:", err);
@@ -62,8 +61,20 @@ exports.getWatchListMovies = (req, res) => {
     });
 };
 
+exports.removeFromWatchlist = (req, res) => {
+  const user_id = req.session.user?.user_id;
+  const movie_id = req.body.movie_id;
 
+  if (!user_id) {
+    return res.status(401).send("Unauthorized");
+  }
 
-
-
-
+  movieModel.removeFromWatchlist(user_id, movie_id)
+    .then(() => {
+      res.redirect('/watchlistpage/watlistmovies');
+    })
+    .catch((err) => {
+      console.error("Error removing movie from watchlist:", err);
+      res.status(500).send("Error removing movie from watchlist");
+    });
+};
