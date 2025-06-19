@@ -1,5 +1,5 @@
 const model = require("../models/movie.model");
-
+const rating =require("../models/rating.model");
 // Show add movie form
 exports.addMoviePage = (req, res) => {
   res.render("addmoviePage.ejs");
@@ -15,17 +15,45 @@ exports.saveMovie = (req, res) => {
     });
 };
 
+// exports.viewSaveMovies = (req, res) => {
+//   model.getallMovies()
+//     .then(movies => {
+//       //console.log("Fetched Movies:", movies); // Print to console
+//       res.render("viewMovieDetails.ejs", { movies });
+//     })
+//     .catch(err => {
+//       console.error("Error fetching movies:", err);
+//       res.status(500).send("Error loading movies");
+//     });
+// };
 exports.viewSaveMovies = (req, res) => {
-  model.getallMovies()
+  movieModel.getallMovies()  // getallMovies returns a Promise since you're using .then()
     .then(movies => {
-      //console.log("Fetched Movies:", movies); // Print to console
-      res.render("viewMovieDetails.ejs", { movies });
+      // Fetch rating stats for each movie in parallel
+      const statsPromises = movies.map(movie =>
+        ratingModel.getMovieStats(movie.movie_id)
+          .then(stats => ({
+            id: movie.movie_id,
+            avgRating: stats.avgRating,
+            totalVotes: stats.totalVotes
+          }))
+      );
+
+      return Promise.all(statsPromises).then(statsArray => {
+        // Map stats by movie id for quick lookup
+        const statsMap = statsArray.reduce((acc, stat) => {
+          acc[stat.id] = stat;
+          return acc;
+        }, {});
+        res.render("viewMovieDetails", { movies, statsMap });
+      });
     })
     .catch(err => {
       console.error("Error fetching movies:", err);
       res.status(500).send("Error loading movies");
     });
 };
+
 
 
 exports.editMoviePage = (req, res) => {
