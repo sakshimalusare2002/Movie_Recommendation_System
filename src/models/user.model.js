@@ -85,5 +85,24 @@ exports.viewUseList=()=>{
     })
 }
 
+exports.searchMoviesByFields = (query, callback) => {
+  const searchQuery = `
+    SELECT * FROM movies
+    WHERE 
+      title LIKE ? OR 
+      genre LIKE ? OR 
+      director LIKE ? OR 
+      language LIKE ?
+  `;
+  const wildcardQuery = `%${query}%`;
+  const params = [wildcardQuery, wildcardQuery, wildcardQuery, wildcardQuery];
+
+  db.query(searchQuery, params, (err, results) => {
+    if (err) {
+      return callback(err, null);
+    }
+    callback(null, results);
+  });
+};
 
 
