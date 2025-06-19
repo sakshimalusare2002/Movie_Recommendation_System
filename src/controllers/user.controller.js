@@ -234,3 +234,21 @@ exports.UserDashBoard = (req, res) => {
     });
   });
 };
+
+//serach movies
+exports.searchMoviesAjax = (req, res) => {
+  const query = req.query.query;
+
+  if (!query || query.trim() === '') {
+    return res.json([]);
+  }
+
+  models.searchMoviesByFields(query, (err, movies) => {
+    if (err) {
+      console.error('Search error:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    res.json(movies);
+  });
+};

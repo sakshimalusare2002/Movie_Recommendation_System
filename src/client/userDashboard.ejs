@@ -6,24 +6,15 @@
   <title>User Dashboard - Movie Recommendation</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
       background-color: #f4f6f9;
       color: #333;
     }
-
-    .dashboard {
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
+    .dashboard { display: flex; height: 100vh; overflow: hidden; }
     .sidebar {
       width: 240px;
       background-color: #1f1f2e;
@@ -32,13 +23,7 @@
       display: flex;
       flex-direction: column;
     }
-
-    .sidebar h2 {
-      text-align: center;
-      color: #fff;
-      margin-bottom: 20px;
-    }
-
+    .sidebar h2 { text-align: center; margin-bottom: 20px; }
     .nav-link {
       color: #ddd;
       text-decoration: none;
@@ -49,19 +34,8 @@
       padding: 8px 12px;
       border-radius: 6px;
     }
-
-    .nav-link.active,
-    .nav-link:hover {
-      background-color: #333950;
-      color: #fff;
-    }
-
-    .main {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
+    .nav-link.active, .nav-link:hover { background-color: #333950; color: #fff; }
+    .main { flex-grow: 1; display: flex; flex-direction: column; }
     .topbar {
       height: 60px;
       background-color: #fff;
@@ -71,18 +45,14 @@
       justify-content: space-between;
       border-bottom: 1px solid #ddd;
     }
-
+    .topbar form { margin: 0; }
     .search-input {
       border: 1px solid #ccc;
       padding: 8px 12px;
       border-radius: 4px;
       width: 300px;
     }
-
-    .profile-dropdown {
-      position: relative;
-    }
-
+    .profile-dropdown { position: relative; }
     .profile-btn {
       border: none;
       background: none;
@@ -92,12 +62,7 @@
       align-items: center;
       gap: 8px;
     }
-
-    .profile-btn .material-icons {
-      font-size: 40px;
-      color: #555;
-    }
-
+    .profile-btn .material-icons { font-size: 40px; color: #555; }
     .profile-content {
       display: none;
       position: absolute;
@@ -110,18 +75,13 @@
       z-index: 10;
       border-radius: 6px;
     }
-
     .profile-dropdown:focus-within .profile-content,
-    .profile-dropdown:hover .profile-content {
-      display: block;
-    }
-
+    .profile-dropdown:hover .profile-content { display: block; }
     .profile-content p {
       margin: 4px 0;
       font-size: 0.9rem;
       color: #333;
     }
-
     .logout-btn {
       margin-top: 8px;
       padding: 6px 12px;
@@ -133,21 +93,18 @@
       cursor: pointer;
       width: 100%;
     }
-
     .content-area {
       padding: 20px;
       overflow-y: auto;
       background-color: #f9f9fb;
       flex-grow: 1;
     }
-
     .movie-grid {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
       justify-content: center;
     }
-
     .movie-card {
       position: relative;
       width: calc(100% / 6 - 20px);
@@ -155,7 +112,6 @@
       overflow: hidden;
       transition: all 0.3s ease;
     }
-
     .poster-wrapper {
       position: relative;
       width: 100%;
@@ -163,7 +119,6 @@
       overflow: hidden;
       border-radius: 10px;
     }
-
     .movie-poster {
       width: 100%;
       height: 100%;
@@ -171,7 +126,6 @@
       display: block;
       transition: 0.3s ease;
     }
-
     .overlay {
       position: absolute;
       bottom: 0;
@@ -186,26 +140,22 @@
       flex-direction: column;
       align-items: center;
     }
-
     .movie-card:hover .overlay {
       opacity: 1;
       transform: translateY(0);
     }
-
     .movie-title {
       font-size: 16px;
       font-weight: bold;
       text-align: center;
       margin-bottom: 10px;
     }
-
     .overlay-buttons {
       display: flex;
       flex-direction: column;
       gap: 8px;
       width: 100%;
     }
-
     .overlay-buttons .btn {
       padding: 8px 12px;
       font-size: 13px;
@@ -217,28 +167,15 @@
       text-align: center;
       text-decoration: none;
     }
-
-    .overlay-buttons .btn:hover {
-      background: #e2e2e2;
-    }
-
-    .overlay-buttons form {
-      margin: 0;
-      width: 100%;
-    }
-
-    .overlay-buttons form button {
-      width: 100%;
-    }
+    .overlay-buttons .btn:hover { background: #e2e2e2; }
+    .overlay-buttons form { margin: 0; width: 100%; }
+    .overlay-buttons form button { width: 100%; }
   </style>
-  
-
 </head>
+
 <body>
 <div class="dashboard">
   <nav class="sidebar">
-
- 
     <h2>🎮 MyMovies</h2>
     <a href="/userDashboard" class="nav-link"><span class="material-icons">video_library</span>Recommendations</a>
     <a href="/watchlistpage/watlistmovies" class="nav-link active"><span class="material-icons">stars</span><span><%= user.name %>'s Watchlist</span></a>
@@ -248,7 +185,17 @@
 
   <div class="main">
     <header class="topbar">
-      <input type="text" class="search-input" placeholder="Search movies by title or genre" />
+      <form action="/ajax/search" method="GET">
+       <input
+  type="text"
+  name="query"
+  class="search-input"
+  placeholder="Search by title, genre, director or language"
+  oninput="liveSearch(this.value)"
+  autocomplete="off"
+/>
+
+      </form>
       <% if (user) { %>
       <div class="profile-dropdown" tabindex="0">
         <button class="profile-btn">
@@ -267,10 +214,15 @@
     </header>
 
     <main class="content-area">
-      <h3>Welcome to your dashboard</h3>
-      <p>Your personalized movie recommendations will appear here.</p>
+      <% if (typeof query !== 'undefined' && query) { %>
+        <h3>Showing results for "<%= query %>"</h3>
+        <p>Search results based on title, genre, director, or language.</p>
+      <% } else { %>
+        <h3>Welcome to your dashboard</h3>
+        <p>Your personalized movie recommendations will appear here.</p>
+      <% } %>
 
-      <div class="movie-grid">
+      <div class="movie-grid" id="searchResults">
         <% if (movies && movies.length > 0) { %>
           <% movies.forEach((movie) => { %>
             <div class="movie-card">
@@ -280,37 +232,96 @@
                   <h5 class="movie-title"><%= movie.title %></h5>
                   <div class="overlay-buttons">
                     <a href="<%= movie.trailer_url %>" target="_blank" class="btn">Trailer</a>
-                    
                     <a href="<%= movie.movie_url || '#' %>" class="btn">Watch Movie</a>
-
                     <form action="/watchlistpage/addWatchlist" method="POST">
-                    <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
-                    <button type="submit" class="btn btn-primary">Add to Watchlist</button>
+                      <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
+                      <button type="submit" class="btn btn-primary">Add to Watchlist</button>
                     </form>
-
                   </div>
                 </div>
               </div>
             </div>
           <% }); %>
         <% } else { %>
-          <p>No movies available</p>
+          <% if (typeof query !== 'undefined' && query) { %>
+            <p>No results found for "<%= query %>".</p>
+          <% } else { %>
+            <p>No movies available.</p>
+          <% } %>
         <% } %>
       </div>
     </main>
-  <% if (typeof added !== 'undefined' && added !== null) { %>
-  <script>
-    <% if (added === 'true') { %>
-      alert("✅ Movie added successfully to watchlist!");
-    <% } else if (added === 'duplicate') { %>
-      alert("⚠️ You already added this movie to your watchlist!");
+
+    <% if (typeof added !== 'undefined' && added !== null) { %>
+    <script>
+      <% if (added === 'true') { %>
+        alert("✅ Movie added successfully to watchlist!");
+      <% } else if (added === 'duplicate') { %>
+        alert("⚠️ You already added this movie to your watchlist!");
+      <% } %>
+    </script>
     <% } %>
-  </script>
-<% } %>
-
-
-
   </div>
 </div>
+
+<script>
+  const resultsContainer = document.getElementById("searchResults");
+  const loader = document.createElement("p");
+  loader.textContent = "🔄 Loading...";
+  loader.style.textAlign = "center";
+  loader.style.fontWeight = "bold";
+
+  let debounceTimeout;
+
+  function liveSearch(query) {
+    clearTimeout(debounceTimeout);
+
+    debounceTimeout = setTimeout(() => {
+      if (query.trim().length === 0) {
+        location.reload();
+        return;
+      }
+
+      resultsContainer.innerHTML = "";
+      resultsContainer.appendChild(loader);
+
+      fetch(`/ajax/search?query=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => {
+          resultsContainer.innerHTML = "";
+
+          if (!data || data.length === 0) {
+            resultsContainer.innerHTML = "<p style='text-align:center;'>🚫 No results found.</p>";
+            return;
+          }
+
+          data.forEach(movie => {
+            const card = `
+              <div class="movie-card">
+                <div class="poster-wrapper">
+                  <img src="${movie.poster_url}" class="movie-poster" alt="Movie Poster">
+                  <div class="overlay">
+                    <h5 class="movie-title">${movie.title}</h5>
+                    <div class="overlay-buttons">
+                      <a href="${movie.trailer_url}" target="_blank" class="btn">Trailer</a>
+                      <a href="${movie.movie_url || "#"}" class="btn">Watch Movie</a>
+                      <form action="/watchlistpage/addWatchlist" method="POST">
+                        <input type="hidden" name="movie_id" value="${movie.movie_id}">
+                        <button type="submit" class="btn btn-primary">Add to Watchlist</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+            resultsContainer.innerHTML += card;
+          });
+        })
+        .catch(() => {
+          resultsContainer.innerHTML = "<p style='text-align:center;'>❌ Something went wrong.</p>";
+        });
+    }, 400);
+  }
+</script>
 </body>
 </html>

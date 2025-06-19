@@ -29,4 +29,7 @@ router.get("/userlist",userController.viewUsers);
 
 router.get("/userDashboard", userController.UserDashBoard);
 
+// Search Movies
+router.get('/ajax/search', userController.searchMoviesAjax);
+
 module.exports = router;
