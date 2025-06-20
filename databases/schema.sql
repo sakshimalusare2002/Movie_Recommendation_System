@@ -54,3 +54,14 @@ CREATE TABLE recommendations (
     FOREIGN KEY (movie_id) REFERENCES movies(movie_id) ON DELETE CASCADE
 );
 alter table users  add login_count int default 0;
+
+mysql> CREATE TABLE liked_movies (
+    ->   like_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->   user_id INT NOT NULL,
+    ->   movie_id INT NOT NULL,
+    ->   liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ->   UNIQUE(user_id, movie_id),
+    ->   FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    ->   FOREIGN KEY (movie_id) REFERENCES movies(movie_id) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected (0.46 sec)

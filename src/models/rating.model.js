@@ -1,30 +1,28 @@
-// src/models/rating.model.js
 const db = require("../config/db");
 
+exports.getUserRating = (user_id, movie_id) => {
+  return db.promise().query(
+    "SELECT rating FROM ratings WHERE user_id = ? AND movie_id = ?",
+    [user_id, movie_id]
+  );
+};
+
 exports.addOrUpdateRating = (user_id, movie_id, rating) => {
-  return new Promise((resolve, reject) => {
-    const sql = `
-      INSERT INTO ratings (user_id, movie_id, rating)
-      VALUES (?, ?, ?)
-      ON DUPLICATE KEY UPDATE
-        rating = VALUES(rating),
-        created_at = CURRENT_TIMESTAMP
-    `;
-    db.query(sql, [user_id, movie_id, rating], (err, res) =>
-      err ? reject(err) : resolve(res)
-    );
-  });
+  return db.promise().query(
+    `INSERT INTO ratings (user_id, movie_id, rating) 
+     VALUES (?, ?, ?)
+     ON DUPLICATE KEY UPDATE rating = VALUES(rating)`,
+    [user_id, movie_id, rating]
+  );
 };
 
 exports.getMovieStats = (movie_id) => {
-  return new Promise((resolve, reject) => {
-    const sql = `
-      SELECT AVG(rating) AS avgRating, COUNT(*) AS totalVotes
-      FROM ratings
-      WHERE movie_id = ?
-    `;
-    db.query(sql, [movie_id], (err, results) =>
-      err ? reject(err) : resolve(results[0])
-    );
-  });
+  return db.promise().query(
+    `SELECT 
+       ROUND(AVG(rating), 1) AS avgRating, 
+       COUNT(*) AS totalVotes 
+     FROM ratings 
+     WHERE movie_id = ?`,
+    [movie_id]
+  ).then(([rows]) => rows[0]); // ✅ return a single stats object
 };

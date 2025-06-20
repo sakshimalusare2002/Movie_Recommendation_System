@@ -1,5 +1,5 @@
 const model = require("../models/movie.model");
-const rating =require("../models/rating.model");
+const rating =require("../models/rating.model");;
 // Show add movie form
 exports.addMoviePage = (req, res) => {
   res.render("addmoviePage.ejs");
