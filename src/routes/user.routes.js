@@ -38,4 +38,9 @@ router.post('/like', likeController.likeMovie);
 router.get('/liked', likeController.viewLikedMovies);
 
 
+router.get("/recommendation", userController.RecommendationPage);
+
+router.get("/loginpage", userController.LoginPageOfUser);
+
+
 module.exports = router;

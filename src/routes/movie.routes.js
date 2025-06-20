@@ -25,7 +25,12 @@ router.get("/deletemovie/:id", movieController.deleteMovie);
 router.get("/logoutAdmin", adminController.logoutAdmin);
 
 
+
 //   rating routes here
 router.get("/rate/:movie_id", ratingController.getRatingPage);
 router.post("/rate", ratingController.submitRating);
+
+router.get("/dashboard", movieController.UserDashBoard);
+
+
 module.exports = router;
