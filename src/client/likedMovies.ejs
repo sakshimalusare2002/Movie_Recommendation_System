@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Liked Movies</title>
+
+  <link rel="stylesheet" href="../client/css/userDashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f5f7fa;
+  }
+
+  .container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Sidebar Styling */
+  .sidebar {
+    width: 240px;
+    background-color: #1e1e2f;
+    color: #fff;
+    padding: 30px 20px;
+  }
+
+  .sidebar h2 {
+    font-size: 22px;
+    margin-bottom: 30px;
+  }
+
+  .sidebar a {
+    display: block;
+    margin: 15px 0;
+    color: #cdd1e4;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+
+  .sidebar a:hover,
+  .sidebar a.active {
+    color: #ffffff;
+    font-weight: bold;
+  }
+
+  /* Main Content */
+  .main-content {
+    flex-grow: 1;
+    padding: 30px 40px;
+    overflow-y: auto;
+  }
+
+  .liked-heading {
+    font-size: 28px;
+    font-weight: 600;
+    color: #f44336;
+    margin-bottom: 20px;
+  }
+
+  /* Movie Grid */
+  .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    align-items: start;
+  }
+
+  .movie-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    text-align: center;
+    padding-bottom: 15px;
+    width: 250px; /*fixed width */
+  height: 500px; 
+  }
+
+  .movie-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .poster {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+  }
+
+  .movie-info {
+    padding: 10px 15px;
+  }
+
+  .movie-info h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 10px 0;
+    color: #333;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    background-color: #3f51b5;
+    color: white;
+    font-size: 14px;
+    transition: 0.2s;
+  }
+
+  .watch-btn {
+    background-color: #4caf50;
+  }
+
+  .btn:hover {
+    opacity: 0.9;
+  }
+
+  .disabled {
+    background-color: #ccc;
+    color: #555;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Modal Player */
+  #playerModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  #moviePlayer {
+    width: 80%;
+    height: 80%;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 28px;
+    color: #fff;
+    cursor: pointer;
+  }
+</style>
+
+</head>
+<body>
+<div class="container">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <h2>🎮 MyMovies</h2>
+    <a href="/userDashboard">Recommendations</a>
+    <a href="/watchlistpage/watlistmovies" class="active"><%= user.name %>'s Watchlist</a>
+    <a href="/liked">Liked</a>
+    <a href="/recent">Recently Watched</a>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h2 class="liked-heading"><i class="fa-solid fa-heart"></i> Liked Movies</h2>
+    <div class="movie-grid">
+      <% if (movies.length > 0) { %>
+        <% movies.forEach(movie => { %>
+          <div class="movie-card">
+            <img src="<%= movie.poster_url || '/images/no-image.png' %>" alt="Movie Poster" class="poster" onerror="this.src='/images/no-image.png';" />
+            <div class="movie-info">
+              <h3><%= movie.title || 'Untitled' %></h3>
+              <div class="buttons">
+                <% if (movie.trailer_url) { %>
+                  <a href="<%= movie.trailer_url %>" target="_blank" class="btn">🎬 Watch Trailer</a>
+                <% } else { %>
+                  <span class="btn disabled">No Trailer</span>
+                <% } %>
+
+                <% if (movie.movie_url) { %>
+                  <button class="btn watch-btn" onclick="openPlayer('<%= movie.movie_url %>')">▶️ Watch Movie</button>
+                <% } else { %>
+                  <span class="btn disabled">Not Available</span>
+                <% } %>
+
+                <form action="/liked/remove" method="POST">
+                  <input type="hidden" name="movie_id" value="<%= movie.movie_id %>" />
+                  <button type="submit" class="btn remove-btn">❌ Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p class="no-movies">You haven't liked any movies yet.</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Player -->
+<div id="playerModal">
+  <span class="close-btn" onclick="closePlayer()">&times;</span>
+  <iframe id="moviePlayer" allowfullscreen></iframe>
+</div>
+
+<script>
+  function openPlayer(url) {
+    const modal = document.getElementById('playerModal');
+    const iframe = document.getElementById('moviePlayer');
+    let embedURL = url;
+
+    // Convert YouTube watch URL to embed format if needed
+    if (url.includes("youtube.com/watch?v=")) {
+      const videoId = url.split("v=")[1].split("&")[0];
+      embedURL = `https://www.youtube.com/embed/${videoId}`;
+    }
+
+    modal.style.display = 'flex';
+    iframe.src = embedURL;
+  }
+
+  function closePlayer() {
+    const modal = document.getElementById('playerModal');
+    const iframe = document.getElementById('moviePlayer');
+    modal.style.display = 'none';
+    iframe.src = '';
+  }
+</script>
+</body>
+</html>
