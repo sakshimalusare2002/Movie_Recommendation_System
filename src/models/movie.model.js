@@ -41,15 +41,15 @@ exports.getallMovies = () => {
   });
 };
 
+// model.js
 exports.getMovieById = (id) => {
   return new Promise((resolve, reject) => {
     db.query("SELECT * FROM movies WHERE movie_id = ?", [id], (err, rows) => {
-      if (err) reject(err);
-      else resolve([rows]); 
+      if (err) return reject(err);
+      resolve(rows[0]); // ✅ Only return the first row (the movie object)
     });
   });
 };
-
 
 exports.updateMovie = (id, movieData) => {
   const {
@@ -100,7 +100,24 @@ exports.deleteMovie = (id) => {
 
 
 exports.getAllMovies = (callback) => {
+
   const sql = "SELECT * FROM movies";
   db.query(sql, callback);
+};
+
+
+//   const sql = "SELECT * FROM movies"; // Ensure 'movies' table exists with poster_url, title, genre
+//   db.query(sql, (err, results) => {
+//     if (err) return callback(err);
+//     callback(null, results);
+//   });
+// };
+
+exports.getMoviesByGenre = (genre, callback) => {
+  const sql = "SELECT * FROM movies WHERE LOWER(genre) LIKE LOWER(?) ORDER BY RAND() LIMIT 20";
+  db.query(sql, [`%${genre}%`], (err, results) => {
+    if (err) return callback(err);
+    callback(null, results);
+  });
 };
 
