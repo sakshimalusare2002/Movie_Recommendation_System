@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require("../controllers/user.controller");
 const adminController=require("../controllers/AdminController");
 const movieController=require("../controllers/movie.controller");
+let ratingController=require("../controllers/ratingController");
 
 router.get("/add", movieController.addMoviePage);
 
@@ -22,4 +23,9 @@ router.post("/updatemovie/:id", movieController.updateMovie);
 router.get("/deletemovie/:id", movieController.deleteMovie);
 
 router.get("/logoutAdmin", adminController.logoutAdmin);
+
+
+//   rating routes here
+router.get("/rate/:movie_id", ratingController.getRatingPage);
+router.post("/rate", ratingController.submitRating);
 module.exports = router;

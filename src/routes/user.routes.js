@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controller");
 const adminController=require("../controllers/AdminController");
+const likeController=require("../controllers/likedController");
 
 router.get("/", userController.getProfile);
 router.get("/loginpage",userController.LoginPageOfUser);
@@ -31,5 +32,10 @@ router.get("/userDashboard", userController.UserDashBoard);
 
 // Search Movies
 router.get('/ajax/search', userController.searchMoviesAjax);
+
+
+router.post('/like', likeController.likeMovie);
+router.get('/liked', likeController.viewLikedMovies);
+
 
 module.exports = router;

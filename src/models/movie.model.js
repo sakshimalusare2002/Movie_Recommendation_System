@@ -43,12 +43,13 @@ exports.getallMovies = () => {
 
 exports.getMovieById = (id) => {
   return new Promise((resolve, reject) => {
-    db.query("SELECT * FROM movies WHERE movie_id = ?", [id], (err, result) => {
+    db.query("SELECT * FROM movies WHERE movie_id = ?", [id], (err, rows) => {
       if (err) reject(err);
-      else resolve(result[0]);
+      else resolve([rows]); 
     });
   });
 };
+
 
 exports.updateMovie = (id, movieData) => {
   const {
