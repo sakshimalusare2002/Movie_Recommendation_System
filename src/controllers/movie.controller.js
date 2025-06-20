@@ -19,17 +19,6 @@ exports.saveMovie = (req, res) => {
 };
 
 
-// exports.viewSaveMovies = (req, res) => {
-//   model.getallMovies()
-//     .then(movies => {
-//       //console.log("Fetched Movies:", movies); // Print to console
-//       res.render("viewMovieDetails.ejs", { movies });
-//     })
-//     .catch(err => {
-//       console.error("Error fetching movies:", err);
-//       res.status(500).send("Error loading movies");
-//     });
-// };
 exports.viewSaveMovies = (req, res) => {
   model.getallMovies()  // getallMovies returns a Promise since you're using .then()
     .then(movies => {
@@ -61,11 +50,28 @@ exports.viewSaveMovies = (req, res) => {
 
 
 exports.editMoviePage = (req, res) => {
-  const id = req.params.id;
-  model.getMovieById(id)
-    .then(movie => res.render("editMovies.ejs", { movie }))
-    .catch(err => res.status(500).send("Error loading movie for edit"));
+  const movieId = req.params.id;
+
+  movieModel.getMovieById(movieId)
+    .then(([rows]) => {
+      const movie = rows[0];
+      console.log("Requested Movie ID:", movieId);
+
+      if (!movie) return res.status(404).send("Movie not found");
+
+      // Ensure release_date is a Date object
+      if (movie.release_date && !(movie.release_date instanceof Date)) {
+        movie.release_date = new Date(movie.release_date);
+      }
+
+      res.render('editMovies', { movie });
+    })
+    .catch(err => {
+      console.error("Error fetching movie:", err);
+      res.status(500).send("Server Error");
+    });
 };
+
 
 exports.updateMovie = (req, res) => {
   const id = req.params.id;

@@ -98,6 +98,10 @@
     <a href="/userDashboard" class="nav-link"><span class="material-icons">video_library</span>Recommendations</a>
     <a href="/watchlistpage/watlistmovies" class="nav-link active"><span class="material-icons">stars</span><span><%= user.name %>'s Watchlist</span></a>
     <a href="/liked" class="nav-link"><span class="material-icons">favorite</span> Liked Movies</a>
+    <a href="/ratedmovies" class="nav-link">
+  <span class="material-icons">star</span> Rated Movies
+</a>
+
     <a href="#" class="nav-link"><span class="material-icons">history</span> Recently Watched</a>
   </nav>
 
@@ -174,7 +178,7 @@
                       <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
                       <button type="submit" class="btn btn-danger">❤️ Like</button>
                     </form>
-                    <div class="user-rating">
+                    <!-- <div class="user-rating">
                       <% const rating = movie.userRating || 0; %>
                       <% for (let i = 1; i <= 5; i++) { %>
                         <span class="star <%= i <= rating ? 'filled' : '' %>">&#9733;</span>
@@ -184,7 +188,7 @@
                       <% } else { %>
                         <p style="font-size: 14px; color: #ccc; margin-top: 4px;">Not rated yet</p>
                       <% } %>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
@@ -197,6 +201,9 @@
     </main>
   </div>
 </div>
+<% if (typeof msg !== 'undefined') { %>
+  <div class="alert alert-success"><%= msg %></div>
+<% } %>
 
 <!-- Video Modal -->
 <div id="videoModal">
@@ -225,14 +232,26 @@
     localStorage.setItem("watchedTime", Math.floor((endTime - startTime) / 1000));
   }
 
+  // function goToRatingPage(movieId) {
+  //   const watched = localStorage.getItem("watchedTime");
+  //   if (!watched || parseInt(watched, 10) < 60) {
+  //     alert("⏳ Please watch the movie for at least 1 minute before rating.");
+  //     return;
+  //   }
+  //   window.location.href = `/movies/rate/${movieId}`;
+  // }
   function goToRatingPage(movieId) {
-    const watched = localStorage.getItem("watchedTime");
-    if (!watched || parseInt(watched, 10) < 60) {
-      alert("⏳ Please watch the movie for at least 1 minute before rating.");
-      return;
-    }
-    window.location.href = `/movies/rate/${movieId}`;
+  const watched = localStorage.getItem("watchedTime");
+
+  if (!watched || parseInt(watched, 10) < 60) {
+    alert("⏳ Please watch the movie for at least 1 minute before rating.");
+    return;
   }
+
+  //  Correct route
+  window.location.href = `/rating/${movieId}`;
+}
+
   function openMovie(url) {
     const modal = document.getElementById("videoModal");
     const frame = document.getElementById("videoFrame");
@@ -347,6 +366,29 @@
     </div>
   </div>
 </div>
+<!-- Rating Toast -->
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 9999;">
+
+  <div id="ratingToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="ratingToastMessage">Rating submitted successfully!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+<script>
+  // For Rating Toast
+  const ratedStatus = new URLSearchParams(window.location.search).get("rated");
+
+  if (ratedStatus === "success") {
+    const toast = new bootstrap.Toast(document.getElementById('ratingToast'));
+    document.getElementById('ratingToastMessage').textContent = "✅ Rating submitted successfully!";
+    toast.show();
+
+    // Optional: Remove the query param after showing message
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+</script>
 
 </body>
 </html>

@@ -31,7 +31,6 @@ exports.addMovie = (
   });
 };
 
-
 exports.getallMovies = () => {
   return new Promise((resolve, reject) => {
     db.query("SELECT * FROM movies", (err, result) => {
@@ -41,12 +40,11 @@ exports.getallMovies = () => {
   });
 };
 
-// model.js
 exports.getMovieById = (id) => {
   return new Promise((resolve, reject) => {
     db.query("SELECT * FROM movies WHERE movie_id = ?", [id], (err, rows) => {
       if (err) return reject(err);
-      resolve(rows[0]); // ✅ Only return the first row (the movie object)
+      resolve([rows]); //  Only return the first row (the movie object)
     });
   });
 };
@@ -65,20 +63,19 @@ exports.updateMovie = (id, movieData) => {
       poster_url = ?, trailer_url = ?, movie_url = ?
     WHERE movie_id = ?
   `;
-//
+
   return new Promise((resolve, reject) => {
     db.query(sql, [
       title, description, release_date, genre, director,
       language, country, parseFloat(budget), parseFloat(revenue), parseInt(runtime),
       poster_url, trailer_url, movie_url,
-      parseInt(id) 
+      parseInt(id)
     ], (err, result) => {
       if (err) reject(err);
       else resolve(result);
     });
   });
 };
-
 
 exports.deleteMovie = (id) => {
   return new Promise((resolve, reject) => {
@@ -89,13 +86,9 @@ exports.deleteMovie = (id) => {
   });
 };
 
-
 exports.getAllMovies = (callback) => {
-  const sql = "SELECT * FROM movies"; // Ensure 'movies' table exists with poster_url, title, genre
-  db.query(sql, (err, results) => {
-    if (err) return callback(err);
-    callback(null, results);
-  });
+  const sql = "SELECT * FROM movies";
+  db.query(sql, callback);
 };
 
 exports.getMoviesByGenre = (genre, callback) => {

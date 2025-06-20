@@ -24,5 +24,21 @@ exports.getMovieStats = (movie_id) => {
      FROM ratings 
      WHERE movie_id = ?`,
     [movie_id]
-  ).then(([rows]) => rows[0]); // ✅ return a single stats object
+  ).then(([rows]) => rows[0]); //  return a single stats object
+};
+
+// Get all rated movies by user with rating and movie details
+exports.getRatedMoviesByUser = (user_id) => {
+  const sql = `
+    SELECT m.*, r.rating 
+    FROM ratings r
+    JOIN movies m ON r.movie_id = m.movie_id
+    WHERE r.user_id = ?
+  `;
+  return new Promise((resolve, reject) => {
+    db.query(sql, [user_id], (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
+    });
+  });
 };

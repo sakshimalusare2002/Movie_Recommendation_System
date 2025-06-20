@@ -45,5 +45,8 @@ let watchlist=require("./routes/watchlist.routes");
 
 app.use("/watchlistpage",watchlist);
 
+let rating=require("../src/routes/rating.routes");
+app.use("/",rating);
+
 module.exports = app;
 

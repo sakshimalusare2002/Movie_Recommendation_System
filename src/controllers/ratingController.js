@@ -27,14 +27,20 @@ const movieModel = require("../models/movie.model");
 
 exports.getRatingPage = (req, res) => {
   const { movie_id } = req.params;
-  const user_id = req.session.user_id; // or wherever you store the user
-    const rated = req.query.rated === 'success';
+  const user_id = req.session.user_id;
+  const rated = req.query.rated === 'success';
+    console.log("Requested Movie ID:", movie_id);
   Promise.all([
     movieModel.getMovieById(movie_id),
     ratingModel.getUserRating(user_id, movie_id)
   ])
     .then(([movieResult, ratingResult]) => {
-      const movie = movieResult[0][0];
+      const movieRows = movieResult[0];
+      if (!movieRows || movieRows.length === 0) {
+        return res.status(404).send("Movie not found");
+      }
+
+      const movie = movieRows[0];
       const userRating = ratingResult[0][0]?.rating || null;
 
       res.render("ratingform", {
@@ -50,19 +56,21 @@ exports.getRatingPage = (req, res) => {
     });
 };
 
-exports.submitRating = (req, res) => {
-  const { movie_id, rating, watchedTime, user_id } = req.body;
 
-  console.log(" movie_id:", movie_id);
+exports.submitRating = (req, res) => {
+  const { movie_id, rating, watchedTime } = req.body;
+  const user_id = req.session.user?.user_id;
+
+
+   console.log("movie_id:", movie_id);
   console.log("rating:", rating);
-  console.log("user_id:", user_id);
   console.log("watchedTime:", watchedTime);
+  console.log("user_id:", user_id);
 
   if (!user_id || !movie_id || !rating) {
-    return res.status(400).send(" Missing user, movie, or rating.");
+    return res.status(400).send("Missing user, movie, or rating.");
   }
 
-  // optional condition
   if (Number(watchedTime) < 60) {
     return res.status(400).send("⚠ Must watch at least 1 minute before rating.");
   }
@@ -70,12 +78,31 @@ exports.submitRating = (req, res) => {
   ratingModel.addOrUpdateRating(user_id, movie_id, rating)
     .then(() => {
       console.log("Rating saved!");
-     // Redirect with a query parameter
-res.redirect("/userDashboard?rated=success");
-
+      res.redirect("/userDashboard?rated=success");
     })
     .catch((err) => {
-      console.error(" Error submitting rating:", err);
+      console.error("Error submitting rating:", err);
       res.status(500).send("Failed to rate movie");
-    });
+    });
+};
+
+
+exports.viewRatedMovies = (req, res) => {
+  const user = req.session.user;
+
+  if (!user) {
+    return res.redirect("/loginpage"); // or show login page
+  }
+
+  ratingModel.getRatedMoviesByUser(user.user_id)
+    .then((ratedMovies) => {
+      res.render("ratedMovies", {
+        user,
+        ratedMovies
+      });
+    })
+    .catch((err) => {
+      console.error("Error fetching rated movies:", err);
+      res.status(500).send("Error loading rated movies");
+    });
 };

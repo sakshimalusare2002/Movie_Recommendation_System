@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rated Movies</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f9;
+    }
+
+    .container-wrapper {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background-color: #1f1f2e;
+      color: #fff;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      color: #ccc;
+      text-decoration: none;
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background-color: #333950;
+      color: #fff;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex-grow: 1;
+      padding: 30px 40px;
+      overflow-y: auto;
+    }
+
+    h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .movie-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .movie-card img {
+      height: 320px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 15px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .card-body p {
+      font-size: 14px;
+      color: #555;
+      margin: 4px 0;
+    }
+
+    .btn-outline-primary {
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .no-rating {
+      font-size: 16px;
+      color: #777;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-wrapper">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <h2>🎬 MyMovies</h2>
+      <a href="/userDashboard">Recommendations</a>
+      <a href="/watchlistpage/watlistmovies"><%= user.name %>'s Watchlist</a>
+      <a href="/liked">Liked Movies</a>
+      <a href="/ratedmovies" class="active">⭐ Rated Movies</a>
+      <a href="/recent">Recently Watched</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <h2>Hello <%= user.name %>, here are your rated movies:</h2>
+      
+      <% if (ratedMovies.length > 0) { %>
+        <div class="movie-grid">
+          <% ratedMovies.forEach(movie => { %>
+            <div class="movie-card">
+              <img src="<%= movie.poster_url %>" alt="Movie Poster">
+              <div class="card-body">
+                <h5 class="card-title"><%= movie.title %></h5>
+                <p><strong>Your Rating:</strong> ⭐ <%= movie.rating %>/5</p>
+                <p><%= movie.genre %> | Directed by <%= movie.director %></p>
+                <a href="/movies/rate/<%= movie.movie_id %>" class="btn btn-sm btn-outline-primary">Edit Rating</a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p class="no-rating">You haven’t rated any movies yet.</p>
+      <% } %>
+    </main>
+  </div>
+</body>
+</html>
