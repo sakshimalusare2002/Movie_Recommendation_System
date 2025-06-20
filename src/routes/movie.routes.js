@@ -14,9 +14,7 @@ router.post("/save", movieController.saveMovie);
 router.get("/viewMovies", movieController.viewSaveMovies);
 
 // Show Edit Movie Form
- router.get("/editmovie/:id", movieController.editMoviePage);
-
-
+router.get("/editmovie/:id", movieController.editMoviePage);
 
 // Update Movie
 router.post("/updatemovie/:id", movieController.updateMovie);

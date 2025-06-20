@@ -19,17 +19,6 @@ exports.saveMovie = (req, res) => {
 };
 
 
-// exports.viewSaveMovies = (req, res) => {
-//   model.getallMovies()
-//     .then(movies => {
-//       //console.log("Fetched Movies:", movies); // Print to console
-//       res.render("viewMovieDetails.ejs", { movies });
-//     })
-//     .catch(err => {
-//       console.error("Error fetching movies:", err);
-//       res.status(500).send("Error loading movies");
-//     });
-// };
 exports.viewSaveMovies = (req, res) => {
   model.getallMovies()  // getallMovies returns a Promise since you're using .then()
     .then(movies => {
@@ -57,15 +46,6 @@ exports.viewSaveMovies = (req, res) => {
       res.status(500).send("Error loading movies");
     });
 };
-
-
-
-// exports.editMoviePage = (req, res) => {
-//   const id = req.params.id;
-//   model.getMovieById(id)
-//     .then(movie => res.render("editMovies.ejs", { movie }))
-//     .catch(err => res.status(500).send("Error loading movie for edit"));
-// };
 
 
 

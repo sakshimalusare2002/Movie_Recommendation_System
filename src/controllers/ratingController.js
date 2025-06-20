@@ -27,20 +27,20 @@ const movieModel = require("../models/movie.model");
 
 exports.getRatingPage = (req, res) => {
   const { movie_id } = req.params;
-
-  if (!req.session.user) {
-    return res.status(401).send("Unauthorized: User not logged in");
-  }
-
-  const user_id = req.session.user.user_id;
+  const user_id = req.session.user_id;
   const rated = req.query.rated === 'success';
-
+    console.log("Requested Movie ID:", movie_id);
   Promise.all([
     movieModel.getMovieById(movie_id),
     ratingModel.getUserRating(user_id, movie_id)
   ])
     .then(([movieResult, ratingResult]) => {
-      const movie = movieResult[0][0];
+      const movieRows = movieResult[0];
+      if (!movieRows || movieRows.length === 0) {
+        return res.status(404).send("Movie not found");
+      }
+
+      const movie = movieRows[0];
       const userRating = ratingResult[0][0]?.rating || null;
 
       res.render("ratingform", {
@@ -58,17 +58,14 @@ exports.getRatingPage = (req, res) => {
 
 
 exports.submitRating = (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).send("Unauthorized: User not logged in");
-  }
-
   const { movie_id, rating, watchedTime } = req.body;
-  const user_id = req.session.user.user_id;
+  const user_id = req.session.user?.user_id;
 
-  console.log("movie_id:", movie_id);
+
+   console.log("movie_id:", movie_id);
   console.log("rating:", rating);
-  console.log("user_id:", user_id);
   console.log("watchedTime:", watchedTime);
+  console.log("user_id:", user_id);
 
   if (!user_id || !movie_id || !rating) {
     return res.status(400).send("Missing user, movie, or rating.");
@@ -91,19 +88,21 @@ exports.submitRating = (req, res) => {
 
 
 exports.viewRatedMovies = (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).send("Unauthorized: User not logged in");
+  const user = req.session.user;
+
+  if (!user) {
+    return res.redirect("/loginpage"); // or show login page
   }
 
-  const userId = req.session.user.user_id;
-  console.log("Logged in user_id:", userId);
-
-  ratingModel.getRatedMoviesByUser(userId)
+  ratingModel.getRatedMoviesByUser(user.user_id)
     .then((ratedMovies) => {
-      res.render("ratedMovies", { movies: ratedMovies });
+      res.render("ratedMovies", {
+        user,
+        ratedMovies
+      });
     })
     .catch((err) => {
       console.error("Error fetching rated movies:", err);
-      res.status(500).send("Server Error");
+      res.status(500).send("Error loading rated movies");
     });
 };

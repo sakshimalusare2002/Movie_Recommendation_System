@@ -32,20 +32,13 @@ exports.findUserByEmailAndUsername = (email, username) => {
 
 
 //used to check the user login details
-// exports.findUserByEmail = (email) => {
-//   let sql = "SELECT user_id, username, email, password, role FROM users WHERE email = ?";
-//   return new Promise((resolve, reject) => {
-//     db.query(sql, [email], (err, result) => {
-//       if (err) return reject(err);
-//       resolve(result.length > 0 ? result[0] : null);
-//     });
-//   });
-// };
-
-exports.findUserByEmail = (email, callback) => {
-  db.query("SELECT * FROM users WHERE email = ?", [email], (err, results) => {
-    if (err) return callback(err);
-    callback(null, results[0]); // Return the first user
+exports.findUserByEmail = (email) => {
+  let sql = "SELECT user_id, username, email, password, role FROM users WHERE email = ?";
+  return new Promise((resolve, reject) => {
+    db.query(sql, [email], (err, result) => {
+      if (err) return reject(err);
+      resolve(result.length > 0 ? result[0] : null);
+    });
   });
 };
 
