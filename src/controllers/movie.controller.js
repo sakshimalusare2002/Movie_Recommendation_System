@@ -67,8 +67,7 @@ exports.viewSaveMovies = (req, res) => {
 //     .catch(err => res.status(500).send("Error loading movie for edit"));
 // };
 
-// src/controllers/movie.controller.js
-const movieModel = require('../models/movie.model');
+
 
 exports.editMoviePage = (req, res) => {
   const movieId = req.params.id;
