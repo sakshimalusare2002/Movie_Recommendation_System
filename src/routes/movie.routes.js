@@ -32,5 +32,5 @@ router.post("/rate", ratingController.submitRating);
 
 router.get("/dashboard", movieController.UserDashBoard);
 
-
+router.get("/getrecommendation", movieController.getRecommendationByGenre);
 module.exports = router;
