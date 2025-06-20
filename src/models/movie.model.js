@@ -90,10 +90,17 @@ exports.deleteMovie = (id) => {
 };
 
 
+// exports.getAllMovies = (callback) => {
+//   const sql = "SELECT * FROM movies"; // Ensure 'movies' table exists with poster_url, title, genre
+//   db.query(sql, (err, results) => {
+//     if (err) return callback(err);
+//     callback(null, results);
+//   });
+// };
+
+
 exports.getAllMovies = (callback) => {
-  const sql = "SELECT * FROM movies"; // Ensure 'movies' table exists with poster_url, title, genre
-  db.query(sql, (err, results) => {
-    if (err) return callback(err);
-    callback(null, results);
-  });
+  const sql = "SELECT * FROM movies";
+  db.query(sql, callback);
 };
+

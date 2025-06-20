@@ -24,5 +24,15 @@ exports.getMovieStats = (movie_id) => {
      FROM ratings 
      WHERE movie_id = ?`,
     [movie_id]
-  ).then(([rows]) => rows[0]); // ✅ return a single stats object
+  ).then(([rows]) => rows[0]); // return a single stats object
+};
+
+exports.getRatedMoviesByUser = (userId) => {
+  const query = `
+    SELECT m.*, r.rating
+    FROM ratings r
+    JOIN movies m ON r.movie_id = m.movie_id
+    WHERE r.user_id = ?
+  `;
+  return db.execute(query, [userId]).then(([rows]) => rows);
 };

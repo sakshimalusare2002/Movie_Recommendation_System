@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rated Movies</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
+    .movie { margin-bottom: 20px; background: white; padding: 15px; border-radius: 6px; box-shadow: 0 0 6px rgba(0,0,0,0.1); }
+    .movie-title { font-size: 18px; font-weight: bold; }
+    .movie-rating { color: #f39c12; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Your Rated Movies</h2>
+
+  <% if (movies.length > 0) { %>
+    <% movies.forEach(movie => { %>
+      <div class="movie">
+        <div class="movie-title"><%= movie.title %></div>
+        <div>Genre: <%= movie.genre %></div>
+        <div class="movie-rating">Your Rating: <%= movie.rating %> / 5</div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>You haven't rated any movies yet.</p>
+  <% } %>
+
+  <a href="/dashboard">← Back to Dashboard</a>
+</body>
+</html>
