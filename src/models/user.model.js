@@ -106,3 +106,18 @@ exports.searchMoviesByFields = (query, callback) => {
 };
 
 
+exports.getPopularMovies = () => {
+  return db.query(`
+    SELECT *
+    FROM movies
+    WHERE rating >= 4
+    ORDER BY rating DESC
+    LIMIT 20
+  `)
+  .then(([results]) => results)
+  .catch((err) => {
+    console.error("❌ Error in getPopularMovies:", err);
+    throw err;
+  });
+};
+

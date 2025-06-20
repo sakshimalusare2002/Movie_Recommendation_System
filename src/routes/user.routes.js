@@ -32,4 +32,8 @@ router.get("/userDashboard", userController.UserDashBoard);
 // Search Movies
 router.get('/ajax/search', userController.searchMoviesAjax);
 
+router.get("/recommendation", userController.RecommendationPage);
+
+router.get("/loginpage", userController.LoginPageOfUser);
+
 module.exports = router;

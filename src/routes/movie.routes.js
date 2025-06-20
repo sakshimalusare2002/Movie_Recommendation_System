@@ -22,4 +22,7 @@ router.post("/updatemovie/:id", movieController.updateMovie);
 router.get("/deletemovie/:id", movieController.deleteMovie);
 
 router.get("/logoutAdmin", adminController.logoutAdmin);
+
+router.get("/dashboard", movieController.UserDashBoard);
+
 module.exports = router;

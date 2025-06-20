@@ -8,11 +8,12 @@ const db = require("./config/db");
 let app = express();
 app.set("view engine",'ejs');
 app.set("views", path.join(__dirname, "client"));
+
 app.use(express.static('public'));
 
 const session = require('express-session');
 
-app.use(express.static(path.join(__dirname, "client")));
+app.use(express.static(path.join(__dirname,"client")));
 
 app.use(session({
   secret: "thisisaverysecuresecretkey",

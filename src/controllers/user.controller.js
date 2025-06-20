@@ -252,3 +252,30 @@ exports.searchMoviesAjax = (req, res) => {
     res.json(movies);
   });
 };
+
+  exports.RecommendationPage = (req, res) => {
+  const user = req.session?.user || null;
+
+  movieModel.getAllMovies((err, movies) => {
+    if (err) {
+      console.error("Error loading recommendations:", err);
+      return res.status(500).send("Failed to load recommendations");
+    }
+
+    res.render("recommendation", {
+      user,
+      recommendedMovies: movies
+    });
+  });
+};
+
+exports.LoginPageOfUser = (req, res) => {
+  const reason = req.query.reason;
+  let msg = null;
+
+  if (reason === "loginFirst") {
+    msg = "⚠️ You should login first to access this feature.";
+  }
+
+  res.render("UserLogin.ejs", { msg });
+};
