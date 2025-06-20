@@ -130,5 +130,28 @@ exports.UserDashBoard = async (req, res) => {
     res.status(500).send("Error loading recommendations.");
   }
 };
+const movieModel = require("../models/movie.model");
 
-        
+exports.getRecommendationByGenre = (req, res) => {
+  const genre = req.query.genre;
+
+  console.log("✅ Genre received:", genre);
+  console.log("👤 User session:", req.session?.user?.name || "Guest");
+
+  if (!genre || genre.trim() === "") {
+    return res.status(400).send("Genre is required");
+  }
+
+  movieModel.getMoviesByGenre(genre, (err, movies) => {
+    if (err) {
+      console.error("🔥 ERROR in getRecommendationByGenre:", err);
+      return res.status(500).send("Internal Server Error: Could not fetch recommendations");
+    }
+
+    res.render("userDashboard", {
+      user: req.session.user,
+      movies,
+      genreSelected: genre
+    });
+  });
+};

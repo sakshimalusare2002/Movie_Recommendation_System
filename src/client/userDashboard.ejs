@@ -12,7 +12,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <style>
-    * { 
+   
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -43,10 +43,13 @@
     .profile-dropdown:focus-within .profile-content, .profile-dropdown:hover .profile-content { display: block; }
     .logout-btn { margin-top: 8px; padding: 6px 12px; background-color: #e74c3c; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; width: 100%; }
     .content-area { padding: 20px; overflow-y: auto; background-color: #f9f9fb; flex-grow: 1; }
-    .movie-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+  
+   .movie-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
     .movie-card { position: relative; width: calc(100% / 6 - 20px); border-radius: 10px; overflow: hidden; transition: all 0.3s ease; }
     .poster-wrapper { position: relative; width: 100%; height: 300px; overflow: hidden; border-radius: 10px; }
     .movie-poster { width: 100%; height: 100%; object-fit: cover; display: block; transition: 0.3s ease; }
+
+
     .overlay { position: absolute; bottom: 0; background: rgba(0, 0, 0, 0.7); color: white; width: 100%; padding: 12px; transition: 0.3s ease; opacity: 0; transform: translateY(100%); display: flex; flex-direction: column; align-items: center; }
     .movie-card:hover .overlay { opacity: 1; transform: translateY(0); }
     .movie-title { font-size: 16px; font-weight: bold; text-align: center; margin-bottom: 10px; }
@@ -121,15 +124,29 @@
     </header>
 
     <main class="content-area">
-      <% if (typeof query !== 'undefined' && query) { %>
-        <h3>Showing results for "<%= query %>"</h3>
-        <p>Search results based on title, genre, director, or language.</p>
-      <% } else { %>
-        <h3>Welcome to your dashboard</h3>
-        <p>Your personalized movie recommendations will appear here.</p>
-      <% } %>
+     <main class="content-area">
 
-      <div class="movie-grid" id="searchResults">
+  <!-- Genre filter buttons -->
+  <div class="genre-filters mb-4">
+    <h4>Select Category:</h4>
+    <% ["Action", "Comedy", "Drama", "Horror", "Love story", "Sci-Fi", "Thriller"].forEach(g => { %>
+      <a href="/getrecommendation?genre=<%= g %>" class="btn btn-outline-dark m-1">
+        <%= g %>
+      </a>
+    <% }) %>
+  </div>
+
+  <% if (typeof genreSelected !== 'undefined') { %>
+    <h4>Showing "<%= genreSelected %>" Recommendations</h4>
+  <% } else if (typeof query !== 'undefined' && query) { %>
+    <h3>Showing results for "<%= query %>"</h3>
+    <p>Search results based on title, genre, director, or language.</p>
+  <% } else { %>
+    <h3>Welcome to your dashboard</h3>
+    <p>Your personalized movie recommendations will appear here.</p>
+  <% } %>
+
+  <div class="movie-grid" id="searchResults">
         <% if (movies && movies.length > 0) { %>
           <% movies.forEach((movie) => { 
               let embedUrl = movie.movie_url;
@@ -145,7 +162,7 @@
                   <div class="overlay-buttons">
                     <a href="<%= movie.trailer_url %>" target="_blank" class="btn">Trailer</a>
 
-                    <button onclick="handleWatchMovie('<%- embedUrl %>', <%= movie.movie_id %>)" class="btn">Watch Movie</button>
+                    <!-- <button onclick="handleWatchMovie('<%- embedUrl %>', <%= movie.movie_id %>)" class="btn">Watch Movie</button> -->
 
                     <button class="btn" onclick="openMovie('<%= movie.movie_url %>')">Watch Movie</button>
                     <form action="/watchlistpage/addWatchlist" method="POST">

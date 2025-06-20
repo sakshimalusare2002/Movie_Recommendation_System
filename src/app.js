@@ -36,8 +36,9 @@ let userRoutes = require("./routes/user.routes");
 app.use("/", userRoutes);
 
 let movieRouter=require("./routes/movie.routes");
-app.use("/movies",movieRouter);
 
+app.use("/movies",movieRouter);
+app.use("/",movieRouter);
 
 
 let watchlist=require("./routes/watchlist.routes");
