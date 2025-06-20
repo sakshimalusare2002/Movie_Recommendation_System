@@ -6,14 +6,18 @@ exports.addMoviePage = (req, res) => {
 };
 
 exports.saveMovie = (req, res) => {
-  const { title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url,movie_url } = req.body;
-  model.addMovie(title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url,movie_url)
-    .then(() => res.send("Movie saved successfully"))
+  const { title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url, movie_url } = req.body;
+
+  model.addMovie(title, description, release_date, genre, director, language, country, budget, revenue, runtime, poster_url, trailer_url, movie_url)
+    .then(() => {
+      res.render("addmoviePage", { msg: "✅ Movie added successfully!" });
+    })
     .catch(err => {
       console.error("Error saving movie:", err);
       res.status(500).send("Error saving movie");
     });
 };
+
 
 // exports.viewSaveMovies = (req, res) => {
 //   model.getallMovies()
@@ -27,11 +31,11 @@ exports.saveMovie = (req, res) => {
 //     });
 // };
 exports.viewSaveMovies = (req, res) => {
-  movieModel.getallMovies()  // getallMovies returns a Promise since you're using .then()
+  model.getallMovies()  // getallMovies returns a Promise since you're using .then()
     .then(movies => {
       // Fetch rating stats for each movie in parallel
       const statsPromises = movies.map(movie =>
-        ratingModel.getMovieStats(movie.movie_id)
+        rating.getMovieStats(movie.movie_id)
           .then(stats => ({
             id: movie.movie_id,
             avgRating: stats.avgRating,
@@ -106,4 +110,25 @@ exports.adminDashboard=(req,res)=>{
       res.status(500).send("Dashboard error");
     });
 };
+
+exports.UserDashBoard = async (req, res) => {
+  const email = req.session.email || req.user?.email;
+
+  try {
+    const user = await models.getUserByEmail(email);
+    const userId = user.id;
+
+    const topGenres = await models.getTopGenresByUser(userId);
+    const recommendedMovies = await models.getMoviesByGenresExcludingWatched(userId, topGenres);
+
+    res.render("userDashboard", {
+      user,
+      movies: recommendedMovies
+    });
+  } catch (err) {
+    console.error("Error loading dashboard:", err);
+    res.status(500).send("Error loading recommendations.");
+  }
+};
+
         

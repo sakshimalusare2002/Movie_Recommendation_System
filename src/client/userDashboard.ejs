@@ -14,7 +14,9 @@
       background-color: #f4f6f9;
       color: #333;
     }
-    .dashboard { display: flex; height: 100vh; overflow: hidden; }
+    .dashboard {
+       display: flex; height: 100vh; overflow: hidden;
+       }
     .sidebar {
       width: 240px;
       background-color: #1f1f2e;
@@ -170,6 +172,36 @@
     .overlay-buttons .btn:hover { background: #e2e2e2; }
     .overlay-buttons form { margin: 0; width: 100%; }
     .overlay-buttons form button { width: 100%; }
+
+    /* Video modal */
+    #videoModal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+    #videoModal iframe {
+      width: 80%;
+      height: 80%;
+      border: none;
+      border-radius: 10px;
+    }
+    #videoModal button {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: red;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
   </style>
 </head>
 
@@ -177,11 +209,6 @@
 <div class="dashboard">
   <nav class="sidebar">
     <h2>🎮 MyMovies</h2>
-
- 
-
- 
-
     <a href="/userDashboard" class="nav-link"><span class="material-icons">video_library</span>Recommendations</a>
     <a href="/watchlistpage/watlistmovies" class="nav-link active"><span class="material-icons">stars</span><span><%= user.name %>'s Watchlist</span></a>
     <a href="#" class="nav-link"><span class="material-icons">favorite</span> Liked</a>
@@ -191,15 +218,7 @@
   <div class="main">
     <header class="topbar">
       <form action="/ajax/search" method="GET">
-       <input
-  type="text"
-  name="query"
-  class="search-input"
-  placeholder="Search by title, genre, director or language"
-  oninput="liveSearch(this.value)"
-  autocomplete="off"
-/>
-
+        <input type="text" name="query" class="search-input" placeholder="Search by title, genre, director or language" oninput="liveSearch(this.value)" autocomplete="off" />
       </form>
       <% if (user) { %>
       <div class="profile-dropdown" tabindex="0">
@@ -237,7 +256,7 @@
                   <h5 class="movie-title"><%= movie.title %></h5>
                   <div class="overlay-buttons">
                     <a href="<%= movie.trailer_url %>" target="_blank" class="btn">Trailer</a>
-                    <a href="<%= movie.movie_url || '#' %>" class="btn">Watch Movie</a>
+                    <button class="btn" onclick="openMovie('<%= movie.movie_url %>')">Watch Movie</button>
                     <form action="/watchlistpage/addWatchlist" method="POST">
                       <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
                       <button type="submit" class="btn btn-primary">Add to Watchlist</button>
@@ -256,20 +275,34 @@
         <% } %>
       </div>
     </main>
-
-    <% if (typeof added !== 'undefined' && added !== null) { %>
-    <script>
-      <% if (added === 'true') { %>
-        alert("✅ Movie added successfully to watchlist!");
-      <% } else if (added === 'duplicate') { %>
-        alert("⚠️ You already added this movie to your watchlist!");
-      <% } %>
-    </script>
-    <% } %>
   </div>
 </div>
 
+<!-- Video Modal -->
+<div id="videoModal">
+  <button onclick="closeModal()">Close</button>
+  <iframe id="videoFrame" allowfullscreen></iframe>
+</div>
+
 <script>
+  function openMovie(url) {
+    const modal = document.getElementById("videoModal");
+    const frame = document.getElementById("videoFrame");
+
+    if (url.includes("youtube.com/watch")) {
+      const videoId = new URL(url).searchParams.get("v");
+      url = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    }
+
+    frame.src = url;
+    modal.style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("videoModal").style.display = "none";
+    document.getElementById("videoFrame").src = "";
+  }
+
   const resultsContainer = document.getElementById("searchResults");
   const loader = document.createElement("p");
   loader.textContent = "🔄 Loading...";
@@ -277,29 +310,23 @@
   loader.style.fontWeight = "bold";
 
   let debounceTimeout;
-
   function liveSearch(query) {
     clearTimeout(debounceTimeout);
-
     debounceTimeout = setTimeout(() => {
       if (query.trim().length === 0) {
         location.reload();
         return;
       }
-
       resultsContainer.innerHTML = "";
       resultsContainer.appendChild(loader);
-
       fetch(`/ajax/search?query=${encodeURIComponent(query)}`)
         .then(res => res.json())
         .then(data => {
           resultsContainer.innerHTML = "";
-
           if (!data || data.length === 0) {
             resultsContainer.innerHTML = "<p style='text-align:center;'>🚫 No results found.</p>";
             return;
           }
-
           data.forEach(movie => {
             const card = `
               <div class="movie-card">
@@ -309,7 +336,7 @@
                     <h5 class="movie-title">${movie.title}</h5>
                     <div class="overlay-buttons">
                       <a href="${movie.trailer_url}" target="_blank" class="btn">Trailer</a>
-                      <a href="${movie.movie_url || "#"}" class="btn">Watch Movie</a>
+                      <button class="btn" onclick="openMovie('${movie.movie_url}')">Watch Movie</button>
                       <form action="/watchlistpage/addWatchlist" method="POST">
                         <input type="hidden" name="movie_id" value="${movie.movie_id}">
                         <button type="submit" class="btn btn-primary">Add to Watchlist</button>
@@ -317,8 +344,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
-            `;
+              </div>`;
             resultsContainer.innerHTML += card;
           });
         })
