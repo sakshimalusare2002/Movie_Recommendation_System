@@ -15,3 +15,14 @@ exports.addOrUpdateRating = (user_id, movie_id, rating) => {
     [user_id, movie_id, rating]
   );
 };
+
+exports.getMovieStats = (movie_id) => {
+  return db.promise().query(
+    `SELECT 
+       ROUND(AVG(rating), 1) AS avgRating, 
+       COUNT(*) AS totalVotes 
+     FROM ratings 
+     WHERE movie_id = ?`,
+    [movie_id]
+  ).then(([rows]) => rows[0]); // ✅ return a single stats object
+};

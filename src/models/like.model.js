@@ -5,11 +5,26 @@ exports.saveLike = (userId, movieId) => {
   return db.promise().execute(query, [userId, movieId]);
 };
 
+
 exports.getLikedMovies = (userId) => {
-  const query = `
-    SELECT m.* FROM liked_movies l
-    JOIN movies m ON l.movie_id = m.movie_id
+  return db.promise().query(`
+    SELECT 
+      m.movie_id,
+      m.title,
+      m.poster_url,
+      m.trailer_url,
+      m.movie_url,
+      m.genre
+    FROM liked_movies l
+    INNER JOIN movies m ON l.movie_id = m.movie_id
     WHERE l.user_id = ?
-  `;
-  return db.promise().query(query, [userId]);
+  `, [userId])
+  .then(([rows]) => rows); // Important: return only rows
+};
+
+exports.removeLike = (user_id, movie_id) => {
+  return db.promise().query(
+    "DELETE FROM liked_movies WHERE user_id = ? AND movie_id = ?",
+    [user_id, movie_id]
+  );
 };
