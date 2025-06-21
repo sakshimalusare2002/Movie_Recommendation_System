@@ -37,8 +37,14 @@
       border-radius: 6px;
     }
 
-    .nav-link.active,
+    /* .nav-link.active,
     .nav-link:hover {
+      background-color: #333950;
+      color: #fff;
+    } */
+
+     .sidebar a:hover,
+    .sidebar a.active {
       background-color: #333950;
       color: #fff;
     }
@@ -56,11 +62,12 @@
 
     .search-input {
       border: 1px solid #ccc;
-      padding: 8px 12px;
+      padding: 10px 16px;
       border-radius: 4px;
       width: 300px;
     }
 
+    
     .profile-dropdown {
       position: relative;
     }
@@ -178,6 +185,7 @@
     .remove-btn:hover {
       background-color: #c0392b;
     }
+    
   </style>
 </head>
 <body>
@@ -187,18 +195,18 @@
       <h2>🎮 MyMovies</h2>
       <a href="/userDashboard" class="nav-link"><span class="material-icons">video_library</span>Recommendations</a>
       <a href="/watchlistpage/watlistmovies" class="nav-link active">
-        <span class="material-icons">stars</span><span><%= user.name %>'s Watchlist</span>
+        <span class="material-icons">stars</span><%= user.name %>'s Watchlist
       </a>
-<a href="/ratedmovies" class="active">⭐ Rated Movies</a>
-      <a href="/liked" class="nav-link"><span class="material-icons">favorite</span> Liked</a>
-      <a href="/recent" class="nav-link"><span class="material-icons">history</span> Recently Watched</a>
+      <a href="/liked" class="nav-link"><span class="material-icons">favorite</span>Liked</a>
+      <a href="/ratedmovies" class="nav-link"><span class="material-icons">star</span>Rated</a>
+      <a href="/recent" class="nav-link"><span class="material-icons">history</span>Recently Watched</a>
     </nav>
 
     <!-- Main Content -->
     <div class="main">
       <!-- Topbar -->
       <header class="topbar">
-        <input type="text" class="search-input" placeholder="Search movies by title or genre" />
+        <input type="text" name="query" class="search-input" placeholder="Search by title, genre, director or language" oninput="liveSearch(this.value)" autocomplete="off" />
         <% if (user) { %>
         <div class="profile-dropdown" tabindex="0">
           <button class="profile-btn">
@@ -208,7 +216,7 @@
           <div class="profile-content">
             <p><strong><%= user.name %></strong></p>
             <p><%= user.email %></p>
-            <form action="/logout" method="POST" onsubmit="return confirm('Are you sure you want to logout the account?');">
+            <form action="/logout" method="POST" onsubmit="return confirm('Are you sure you want to logout?');">
               <button class="logout-btn" type="submit">Logout</button>
             </form>
           </div>
@@ -219,8 +227,7 @@
       <!-- Watchlist Content -->
       <main class="content-area">
         <h3><%= user.name %>'s Watchlist</h3>
-
-        <div class="movie-grid">
+        <div class="movie-grid" id="movieGrid">
           <% if (movies.length > 0) { %>
             <% movies.forEach((movie) => { %>
               <div class="movie-card">
@@ -230,9 +237,7 @@
                 <h3><%= movie.title %></h3>
                 <p><%= movie.genre %></p>
                 <a href="<%= movie.movie_url %>" target="_blank" class="watch-btn">▶️ Watch Now</a>
-
-                <!-- Remove from Watchlist Form -->
-                <form action="/watchlistpage/watchlist/remove" method="POST" onclick="return confirm('Are you sure you wnat to Remove this movie From the Watchlist..')">
+                <form action="/watchlistpage/watchlist/remove" method="POST" onclick="return confirm('Are you sure you want to remove this movie?');">
                   <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
                   <button type="submit" class="remove-btn">🗑️ Remove</button>
                 </form>
@@ -245,5 +250,55 @@
       </main>
     </div>
   </div>
+
+  <!-- Live Search Script -->
+  <script>
+    let debounceTimeout;
+
+    function liveSearch(query) {
+      const resultsContainer = document.getElementById("movieGrid");
+      if (!resultsContainer) return;
+
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(() => {
+        if (query.trim().length === 0) {
+          location.reload(); // show full watchlist again
+          return;
+        }
+
+        resultsContainer.innerHTML = "<p style='text-align:center;'>🔄 Searching...</p>";
+
+        fetch(`/ajax/search?query=${encodeURIComponent(query)}`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data || data.length === 0) {
+              resultsContainer.innerHTML = "<p style='text-align:center;'>🚫 No results found.</p>";
+              return;
+            }
+
+            resultsContainer.innerHTML = "";
+            data.forEach(movie => {
+              resultsContainer.innerHTML += `
+                <div class="movie-card">
+                  <a href="${movie.movie_url}" target="_blank">
+                    <img src="${movie.poster_url}" alt="Poster">
+                  </a>
+                  <h3>${movie.title}</h3>
+                  <p>${movie.genre}</p>
+                  <a href="${movie.movie_url}" target="_blank" class="watch-btn">▶️ Watch Now</a>
+                  <form action="/watchlistpage/watchlist/remove" method="POST" onclick="return confirm('Are you sure you want to remove this movie?');">
+                    <input type="hidden" name="movie_id" value="${movie.movie_id}">
+                    <button type="submit" class="remove-btn">🗑️ Remove</button>
+                  </form>
+                </div>
+              `;
+            });
+          })
+          .catch(() => {
+            resultsContainer.innerHTML = "<p style='text-align:center;'>❌ Error loading results.</p>";
+          });
+      }, 400);
+    }
+  </script>
 </body>
 </html>
