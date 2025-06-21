@@ -48,5 +48,8 @@ app.use("/watchlistpage",watchlist);
 let rating=require("../src/routes/rating.routes");
 app.use("/",rating);
 
+
+const recommendationRoutes = require('./routes/recommendationRoutes');
+app.use('/', recommendationRoutes); 
 module.exports = app;
 
