@@ -86,7 +86,7 @@ exports.submitRating = (req, res) => {
     });
 };
 
-
+//view rated movies
 exports.viewRatedMovies = (req, res) => {
   const user = req.session.user;
 
