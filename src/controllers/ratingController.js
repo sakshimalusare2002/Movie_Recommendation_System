@@ -106,3 +106,4 @@ exports.viewRatedMovies = (req, res) => {
       res.status(500).send("Error loading rated movies");
     });
 };
+//after updated
