@@ -11,7 +11,7 @@ router.post('/addWatchlist', watchlist.insertToWatchList);
 router.get("/watlistmovies",watchlist.getWatchListMovies);
 
 
-// router.get("/page",watchlist.insertToWatchList);
+// router.get("/page",watchlist.insertToWatchList); this is comment code
 
 router.post('/watchlist/remove', watchlist.removeFromWatchlist);
 
