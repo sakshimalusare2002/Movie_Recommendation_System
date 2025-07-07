@@ -71,9 +71,9 @@ exports.submitRating = (req, res) => {
     return res.status(400).send("Missing user, movie, or rating.");
   }
 
-  if (Number(watchedTime) < 60) {
-    return res.status(400).send("⚠ Must watch at least 1 minute before rating.");
-  }
+  // if (Number(watchedTime) < 60) {
+  //   return res.status(400).send("⚠ Must watch at least 1 minute before rating.");
+  // }
 
   ratingModel.addOrUpdateRating(user_id, movie_id, rating)
     .then(() => {
